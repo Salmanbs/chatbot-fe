@@ -1,0 +1,74 @@
+@import "variables.scss";
+
+@import "common.scss";
+
+.#{$namespace}conversation-container {
+  
+  .#{$namespace}message {
+    margin: 10px 10px 10px 4px;
+    font-size: 16px;
+    line-height: 20px;
+    display: flex;
+    font-family: $fontfamily;
+    // flex-wrap: wrap;
+    position: relative;
+  
+    .#{$namespace}markdown {
+      p {
+        margin: 0;
+      }
+    }
+  }
+  
+  .#{$namespace}client {
+    @include message-bubble($tosall-theme-color, $white);
+    max-width: 85%;
+    margin-left: auto;
+    overflow-wrap: break-word;
+    a {
+      color: $turqois-1;
+    }
+  }
+  
+  .#{$namespace}response {
+    @include message-bubble($grey-2, #000, 0 15px 15px 15px);
+    overflow-wrap: break-word;
+    box-sizing: content-box;
+  }
+  
+  /* For markdown elements created with default styles */
+  .#{$namespace}message-text {
+    margin: 0;
+
+    a, a:hover {
+      text-decoration: underline;
+    }
+
+    p{
+      margin: 0;
+    }
+    
+    ol:first-child, ul:first-child {
+      margin: 0;
+      padding: 0 0 0 15px;
+    }
+
+    ol:not(:first-child), ul:not(:first-child) {
+      margin: 0;
+      padding: 0 0 0 30px;
+    }
+
+    ol>li {
+      list-style: decimal;
+    }
+
+    ol>li>ul, ul>li {
+      list-style: disc;
+    }
+
+    ol>li>ul>li ul, ul>li>ul>li ul {
+      list-style: circle
+    }
+  }
+
+}

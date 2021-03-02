@@ -1,0 +1,44 @@
+@import "variables.scss";
+
+@import "common.scss";
+
+.#{$namespace}conversation-container {
+
+  .#{$namespace}faqs-wrap {
+    flex: 1;
+    height: 30vh;
+    max-height: 200px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.1);
+    overflow: hidden;
+    max-width: 98%;
+    margin: 10px 0 20px;
+  }
+
+  .#{$namespace}faqs {
+    line-height: 20px;
+    flex-wrap: wrap;
+    overflow: hidden;
+    font-size: 16px;
+    font-family: $fontfamily;
+    height: 100%;
+  }
+
+  .#{$namespace}faqs-heading {
+    background-color: rgba(0,0,0,0.1);
+    min-height: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .#{$namespace}markdown {
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .#{$namespace}faqs-body::-webkit-scrollbar {
+    width: 3px;
+  }
+}

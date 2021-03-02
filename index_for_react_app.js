@@ -1,0 +1,47 @@
+import ConnectedWidget from './src';
+import {
+  addUserMessage,
+  addResponseMessage,
+  addCarousel,
+  addVideoSnippet,
+  addImageSnippet,
+  addQuickReply,
+  addFAQReply,
+  renderCustomComponent,
+  isOpen,
+  isVisible,
+  openChat,
+  closeChat,
+  toggleChat,
+  showChat,
+  hideChat,
+  toggleFullScreen,
+  doInputDisabled,
+  doInputEnabled,
+  dropMessages,
+  send
+} from './src/store/actions/dispatcher';
+
+export {
+  ConnectedWidget as Widget,
+  addUserMessage,
+  addResponseMessage,
+  addCarousel,
+  addVideoSnippet,
+  addImageSnippet,
+  addQuickReply,
+  addFAQReply,
+  renderCustomComponent,
+  isOpen,
+  isVisible,
+  openChat,
+  closeChat,
+  toggleChat,
+  showChat,
+  hideChat,
+  toggleFullScreen,
+  doInputDisabled,
+  doInputEnabled,
+  dropMessages,
+  send
+};

@@ -1,0 +1,36 @@
+@import "variables.scss";
+@import "common.scss";
+
+.#{$namespace}conversation-container {
+  .#{$namespace}footer {
+    align-items: center;
+    display: flex;
+    background-color: $white;
+    text-align: center;
+    justify-content: center;
+    font-family: $fontfamily;
+    position: relative;
+    padding: 2px;
+    .#{$namespace}signature {      
+      padding: 5px 0 5px;
+      .#{$namespace}signature1 {
+        color:rgb(125, 125, 125);
+        text-decoration: none;
+        font-family: $fontfamily;
+        font-size: 12px;
+        .#{$namespace}avatarfooter {
+          width: 48px;
+          margin-left: 2px;
+        }
+    }
+    
+  }
+  }
+}
+
+.#{$namespace}widget-embedded {
+  .#{$namespace}footer {
+    flex: 0, 0, auto;
+    height: 60px;
+  }
+}

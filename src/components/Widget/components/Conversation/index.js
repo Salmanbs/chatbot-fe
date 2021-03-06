@@ -12,7 +12,13 @@ const Conversation = props =>
   <Style>
     {`
       .rw-conversation-container {
-        width: ${props.botWindowSIze};
+        width: ${props.botWindowWidth};
+      }
+      
+      @media screen and (min-width: 801px) {
+        .rw-conversation-container {
+          height: ${props.botWindowHeight};
+        }
       }
 
       @media screen and (max-width: 500px) {
@@ -45,6 +51,7 @@ const Conversation = props =>
         subTitleFontFamily={props.subTitleFontFamily}
         titleBoldNeeded={props.titleBoldNeeded}
         subtitleItalicNeeded={props.subtitleItalicNeeded}
+        button2Launcher={props.button2Launcher}
       />
       <Messages
         connected={props.connected}
@@ -66,6 +73,7 @@ const Conversation = props =>
         botButtonBgColorHover={props.botButtonBgColorHover}
         botButtonAlignment={props.botButtonAlignment}
         minWidthOfButton={props.minWidthOfButton}
+        widthOfButton={props.widthOfButton}
         minHeightOfButton={props.minHeightOfButton}
         horizontalSpaceBtwButton={props.horizontalSpaceBtwButton}
         verticalSpaceBtwButton={props.verticalSpaceBtwButton}
@@ -86,11 +94,20 @@ const Conversation = props =>
         textFontFamily={props.textFontFamily}
         spinnerPathColor={props.spinnerPathColor}
         spinnerRunnerColor={props.spinnerRunnerColor}
+        carouselType1Style={props.carouselType1Style}
+        carouselType2Style={props.carouselType2Style}
+        isFooterEnabled={props.isFooterEnabled}
+        botWindowHeight={props.botWindowHeight}
+        contactInfoStyle={props.contactInfoStyle}
+        isTextAreaBoxShadowEnabled={props.isTextAreaBoxShadowEnabled}
       />
       <Sender
+        connected={props.connected}
         bgColor={props.bgColor}
         sendMessage={props.sendMessage}
         disabledInput={props.disabledInput}
+        disabledAttach={props.disabledAttach}
+        disabledAttachLocation={props.disabledAttachLocation}
         sendButtonColor={props.sendButtonColor}
         userTypeWindowBgColor={props.userTypeWindowBgColor}
         placeholderTextColor={props.placeholderTextColor}
@@ -98,7 +115,10 @@ const Conversation = props =>
         inputCaretColor={props.inputCaretColor}
         chatFontSize={props.chatFontSize}
       />
-      {props.isFooterEnabled && <Footer />}
+      {props.isFooterEnabled &&
+      <Footer
+        poweredByImage={props.poweredByImage}
+      />}
     </div>
   </Style>;
 
@@ -106,7 +126,8 @@ Conversation.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   bgColor: PropTypes.color,
-  botWindowSIze: PropTypes.string,
+  botWindowWidth: PropTypes.string,
+  botWindowHeight: PropTypes.string,
   chatFontSize: PropTypes.string,
   clientchatTextColor: PropTypes.string,
   botButtonBorderColor: PropTypes.color,
@@ -119,6 +140,8 @@ Conversation.propTypes = {
   showCloseButton: PropTypes.bool,
   showFullScreenButton: PropTypes.bool,
   disabledInput: PropTypes.bool,
+  disabledAttach: PropTypes.bool,
+  disabledAttachLocation: PropTypes.bool,
   params: PropTypes.object,
   connected: PropTypes.bool,
   connectingText: PropTypes.string,

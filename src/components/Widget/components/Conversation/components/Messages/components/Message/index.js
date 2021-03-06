@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as marked from 'marked';
 
-import { doInputDisabled, doInputEnabled, changeInputFieldHint } from 'actions';
+import { doInputDisabled, doAttachLocationDisabled, doAttachDisabled, doInputEnabled, changeInputFieldHint } from 'actions';
 
 import { PROP_TYPES } from 'constants';
-import DocViewer from '../docViewer';
 import './styles.scss';
 
 class Message extends PureComponent {
@@ -16,22 +15,20 @@ class Message extends PureComponent {
     const {
       chatFontSize,
       clientchatTextColor,
-      docViewer,
-      linkTarget,
       botChatTextColor,
       clientTextBgColor,
       botTextBgColor,
-      textFontFamily
+      textFontFamily,
+      isTextAreaBoxShadowEnabled
     } = this.props;
 
     const str = this.props.message.get('text');
     const n = str.includes('TERMINATE_CHAT');
     if (n) {
       this.props.changeInputFieldHint('Chat Ended...');
-
-      // this.props.toggleInputDisabled()
       this.props.doInputDisabled();
-      // this.props.message.set('disabledInput',false)
+      this.props.doAttachDisabled();
+      this.props.doAttachLocationDisabled();
       return ('');
     }
 
@@ -56,7 +53,8 @@ class Message extends PureComponent {
             backgroundColor: sender === 'client' ? clientTextBgColor : botTextBgColor,
             color: sender === 'client' ? clientchatTextColor : botChatTextColor,
             fontSize: chatFontSize,
-            fontFamily: textFontFamily
+            fontFamily: textFontFamily,
+            'box-shadow': isTextAreaBoxShadowEnabled ? '0 0px 5px 1px #b5b5b5' : ''
           }}
         >
           <div
@@ -90,6 +88,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   doInputDisabled: () => dispatch(doInputDisabled()),
+  doAttachDisabled: () => dispatch(doAttachDisabled()),
+  doAttachLocationDisabled: () => dispatch(doAttachLocationDisabled()),
   doInputEnabled: () => dispatch(doInputEnabled()),
   changeInputFieldHint: hint => dispatch(changeInputFieldHint(hint))
 });

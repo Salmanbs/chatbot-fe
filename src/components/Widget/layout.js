@@ -26,7 +26,8 @@ const WidgetLayout = (props) => {
         <Conversation
           title={props.title}
           bgColor={props.bgColor}
-          botWindowSIze={props.botWindowSIze}
+          botWindowWidth={props.botWindowWidth}
+          botWindowHeight={props.botWindowHeight}
           botWindowScrollStickColor={props.botWindowScrollStickColor}
           chatFontSize={props.chatFontSize}
           clientchatTextColor={props.clientchatTextColor}
@@ -46,6 +47,7 @@ const WidgetLayout = (props) => {
           sendButtonColor={props.sendButtonColor}
           resetCloseButtonColor={props.resetCloseButtonColor}
           minWidthOfButton={props.minWidthOfButton}
+          widthOfButton={props.widthOfButton}
           minHeightOfButton={props.minHeightOfButton}
           horizontalSpaceBtwButton={props.horizontalSpaceBtwButton}
           verticalSpaceBtwButton={props.verticalSpaceBtwButton}
@@ -75,6 +77,8 @@ const WidgetLayout = (props) => {
           toggleFullScreen={props.toggleFullScreen}
           fullScreenMode={props.fullScreenMode}
           disabledInput={props.disabledInput}
+          disabledAttach={props.disabledAttach}
+          disabledAttachLocation={props.disabledAttachLocation}
           params={props.params}
           showFullScreenButton={props.showFullScreenButton}
           {...{ showCloseButton }}
@@ -85,6 +89,7 @@ const WidgetLayout = (props) => {
           showMessageDate={props.showMessageDate}
           resetChat={props.resetChat}
           isFooterEnabled={props.isFooterEnabled}
+          poweredByImage={props.poweredByImage}
           titleFontFamily={props.titleFontFamily}
           subTitleFontFamily={props.subTitleFontFamily}
           textFontFamily={props.textFontFamily}
@@ -92,6 +97,11 @@ const WidgetLayout = (props) => {
           spinnerRunnerColor={props.spinnerRunnerColor}
           titleBoldNeeded={props.titleBoldNeeded}
           subtitleItalicNeeded={props.subtitleItalicNeeded}
+          button2Launcher={props.button2Launcher}
+          carouselType1Style={props.carouselType1Style}
+          carouselType2Style={props.carouselType2Style}
+          contactInfoStyle={props.contactInfoStyle}
+          isTextAreaBoxShadowEnabled={props.isTextAreaBoxShadowEnabled}
         />
       )}
       {!props.embedded && (
@@ -107,6 +117,8 @@ const WidgetLayout = (props) => {
           tooltipPayload={props.tooltipPayload}
           resetCloseButtonColor={props.resetCloseButtonColor}
           helperText={props.helperText}
+          titleAvatar={props.titleAvatar}
+          button2Launcher={props.button2Launcher}
         />
       )}
     </div>
@@ -117,6 +129,8 @@ const mapStateToProps = state => ({
   isChatVisible: state.behavior.get('isChatVisible'),
   isChatOpen: state.behavior.get('isChatOpen'),
   disabledInput: state.behavior.get('disabledInput'),
+  disabledAttach: state.behavior.get('disabledAttach'),
+  disabledAttachLocation: state.behavior.get('disabledAttachLocation'),
   connected: state.behavior.get('connected'),
   connectingText: state.behavior.get('connectingText')
 });
@@ -125,7 +139,8 @@ WidgetLayout.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   bgColor: PropTypes.color,
-  botWindowSIze: PropTypes.string,
+  botWindowWidth: PropTypes.string,
+  botWindowHeight: PropTypes.string,
   chatFontSize: PropTypes.string,
   clientchatTextColor: PropTypes.color,
   botButtonBorderColor: PropTypes.color,
@@ -140,6 +155,8 @@ WidgetLayout.propTypes = {
   showFullScreenButton: PropTypes.bool,
   hideWhenNotConnected: PropTypes.bool,
   disabledInput: PropTypes.bool,
+  disabledAttach: PropTypes.bool,
+  disabledAttachLocation: PropTypes.bool,
   fullScreenMode: PropTypes.bool,
   badge: PropTypes.number,
   embedded: PropTypes.bool,

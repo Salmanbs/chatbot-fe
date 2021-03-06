@@ -72,13 +72,35 @@ export function doInputDisabled() {
   };
 }
 
+export function doAttachDisabled() {
+  return {
+    type: actions.TOGGLE_ATTACH_DISABLED
+  };
+}
+
+export function doAttachLocationDisabled() {
+  return {
+    type: actions.TOGGLE_ATTACH_LOCATION_DISABLED
+  };
+}
+
 export function doInputEnabled() {
   return {
     type: actions.TOGGLE_INPUT_ENABLED
   };
 }
 
+export function doAttachEnabled() {
+  return {
+    type: actions.TOGGLE_ATTACH_ENABLED
+  };
+}
 
+export function doAttachLocationEnabled() {
+  return {
+    type: actions.TOGGLE_ATTACH_LOCATION_ENABLED
+  };
+}
 
 export function changeInputFieldHint(hint) {
   return {
@@ -151,6 +173,41 @@ export function addFAQReply(quickReply) {
   };
 }
 
+export function addCarouselType1(quickReply) {
+  return {
+    type: actions.ADD_CAROUSEL_TYPE1,
+    quickReply
+  };
+}
+
+export function addCarouselType2(quickReply) {
+  return {
+    type: actions.ADD_CAROUSEL_TYPE2,
+    quickReply
+  };
+}
+
+export function addCollectInfoType1(quickReply) {
+  return {
+    type: actions.ADD_COLLECTINFO_TYPE1,
+    quickReply
+  };
+}
+
+export function addCaptureatttype(quickReply) {
+  return {
+    type: actions.ADD_CAPTURE_ATTYPE,
+    quickReply
+  };
+}
+
+export function addCaptureloctype(quickReply) {
+  return {
+    type: actions.ADD_CAPTURE_LOCTYPE,
+    quickReply
+  };
+}
+
 export function setQuickReply(id, title) {
   return {
     type: actions.SET_QUICK_REPLY,
@@ -162,6 +219,46 @@ export function setQuickReply(id, title) {
 export function setFAQReply(id, title) {
   return {
     type: actions.SET_FAQ_REPLY,
+    id,
+    title
+  };
+}
+
+export function setCarouselType1(id, title) {
+  return {
+    type: actions.SET_CAROUSEL_TYPE1,
+    id,
+    title
+  };
+}
+
+export function setCarouselType2(id, title) {
+  return {
+    type: actions.SET_CAROUSEL_TYPE2,
+    id,
+    title
+  };
+}
+
+export function setCollectInfoType1(id, title) {
+  return {
+    type: actions.SET_COLLECTINFO_TYPE1,
+    id,
+    title
+  };
+}
+
+export function setCaptureatttype(id, title) {
+  return {
+    type: actions.SET_CAPTURE_ATTYPE,
+    id,
+    title
+  };
+}
+
+export function setCaptureloctype(id, title) {
+  return {
+    type: actions.SET_CAPTURE_LOCTYPE,
     id,
     title
   };

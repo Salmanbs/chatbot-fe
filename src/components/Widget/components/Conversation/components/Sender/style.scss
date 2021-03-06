@@ -47,14 +47,79 @@
       transition: fill 0.35s;
     }
   }
+
+  .#{$namespace}attachment-box {
+    width: fit-content;
+    position: absolute;
+    bottom: 60px;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2;
+  }
+
+  .#{$namespace}attachmentBtn {
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.4);
+    outline: none;
+    border: none;
+    border-radius: 50%;
+    margin: 5px;
+  }
+
+  .#{$namespace}uploadPicturesWrapper {
+    height: 20%;
+    bottom: 60px;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    overflow-x: auto;
+    z-index: 1;
+  }
+  
+  .#{$namespace}uploadPictureContainer {
+    width: 45%;
+    height: 100% !important;
+    background: #edf2f6;
+    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.1);
+    border: 1px solid #d0dbe4;
+    position: relative;
+    display: flex;
+  }
+  
+  .#{$namespace}uploadPictureContainer img.#{$namespace}uploadPicture {
+    width: 100%;
+  }
+  
+  .#{$namespace}deleteImage {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    color: #fff;
+    background: #ff4081;
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 21px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .#{$namespace}flipMove {
+    display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+  }
+  
   
   @media screen and (max-width: 800px)  {
     .#{$namespace}sender {
       border-radius: 0;
       flex-shrink: 0;
     }
-  }
-  
+  }  
 }
 
 .#{$namespace}widget-embedded {

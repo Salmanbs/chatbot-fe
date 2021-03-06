@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
-
 import {
   toggleFullScreen,
   toggleChat,
@@ -17,6 +15,11 @@ import {
   addImageSnippet,
   addQuickReply,
   addFAQReply,
+  addCarouselType1,
+  addCarouselType2,
+  addCollectInfoType1,
+  addCaptureatttype,
+  addCaptureloctype,
   renderCustomComponent,
   initialize,
   connectServer,
@@ -36,12 +39,16 @@ import {
   evalUrl,
   setCustomCss,
   doInputDisabled,
+  doAttachDisabled,
+  doAttachLocationDisabled,
   doInputEnabled,
+  doAttachEnabled,
+  doAttachLocationEnabled,
   changeInputFieldHint
 } from 'actions';
 
 import { SESSION_NAME, NEXT_MESSAGE } from 'constants';
-import { isVideo, isImage, isQR, isFAQ, isText, isCarousel } from './msgProcessor';
+import { isVideo, isImage, isQR, isFAQ, isText, isCarousel, isCarouselType1, isCarouselType2, isCollectInfoType1, isCaptureloctype, isCaptureatttype } from './msgProcessor';
 import WidgetLayout from './layout';
 import { storeLocalSession, getLocalSession } from '../../store/reducers/helper';
 
@@ -53,6 +60,8 @@ class Widget extends Component {
     this.messageDelayTimeout = null;
     this.onGoingMessageDelay = false;
     this.customInputEnable = false;
+    this.attachImage = false;
+    this.attachLocation = false;
     this.sendMessage = this.sendMessage.bind(this);
     this.intervalId = null;
     this.eventListenerCleaner = () => { };
@@ -97,40 +106,16 @@ class Widget extends Component {
         this.toggleConversation();
       }, time);
     }
-    $.ajax({
-      url: 'https://www.workchallenger.com/tosall_client2/api/get_layout',
-      type: 'POST',
-      processData: false,
-      contentType: false,
-      crossDomain: true,
-      headers: {
-        Authorization: 'Bearer Kailashchandra353',
-        token: 'Kailashchandra353'
-      },
-	  data: JSON.stringify({
-			"bot_id" :'eEw0U2F5emZ2ZkdHZjJ1RkFxd004Zz09',
-		 
-		})
-    }).done((result) => {
-      console.log('NEW RESP1 ', result);
-      if (result.status == 'success') {
-        console.log('NEW RESP2 ', JSON.stringify(result));
-      }
-    }).fail(() => {
-      console.log('Failed!');
-    });
-	
   }
 
   componentDidUpdate() {
     const { isChatOpen, dispatch, embedded, initialized } = this.props;
-    console.log('componentDidUpdate ');
     if (isChatOpen) {
       if (!initialized) {
         this.initializeWidget();
-        console.log('componentDidUpdate initializeWidget');
-
         this.props.dispatch(doInputDisabled());
+        this.props.dispatch(doAttachDisabled());
+        this.props.dispatch(doAttachLocationDisabled());
         this.props.dispatch(changeInputFieldHint(''));
       }
 
@@ -138,17 +123,14 @@ class Widget extends Component {
       this.trySendInitPayload();
 
       this.sendInitAgainID = setTimeout(() => {
-        console.log('Widget Coneversation not started, Init  conversation ');
         if (!this.conversationStarted) {
           const msgToInit = '/greet_as_bill_assistant';
           if (msgToInit) {
-            console.log('Gurtaj Sending INIT AGAIN');
-            // this.props.dispatch(addUserMessage(msgToInit));
             this.props.dispatch(emitUserMessage(msgToInit));
-
             this.props.dispatch(changeInputFieldHint(''));
             this.props.dispatch(doInputDisabled());
-
+            this.props.dispatch(doAttachDisabled());
+            this.props.dispatch(doAttachLocationDisabled());
           }
         }
       }, 2000);
@@ -161,7 +143,6 @@ class Widget extends Component {
   }
 
   componentWillUnmount() {
-    console.log('componentWillUnmount ');
     const { socket } = this.props;
 
     if (socket) {
@@ -204,13 +185,11 @@ class Widget extends Component {
     const { metadata, ...message } = messageWithMetadata;
     dispatch(changeInputFieldHint(''));
     dispatch(doInputDisabled());
-
+    dispatch(doAttachDisabled());
+    dispatch(doAttachLocationDisabled());
     const str = message.text;
     const n = str.includes('TERMINATE_CHAT');
-
     if (!isChatOpen) {
-      console.log('+++++++ GS isChatOpen case +++++++');
-
       this.dispatchMessage(message);
       dispatch(newUnreadMessage());
       if (!disableTooltips) {
@@ -219,49 +198,57 @@ class Widget extends Component {
       }
     } else if (!this.onGoingMessageDelay) {
       // var msg_hint = message.get('hint');
-      var msg_hint = '';
+      let msg_hint = '';
       if (!n) {
         console.log('+++++++ GS  normal exit delay +++++++');
 
         // var msg_hint = message.get('hint');
         this.customInputEnable = false;
+        this.attachImage = false;
+        this.attachLocation = false;
         if (isText(message)) {
           console.log('+++++++ GS handleMessageReceived MSG text +++++++', str);
           // all last text message should enable text input with no hint, except the TERMINATE_CHAT
           if (!n) {
             msg_hint = 'Type a message…';
             this.customInputEnable = true;
-            //dispatch(changeInputFieldHint('Type a message…'));
-            //dispatch(doInputEnabled());
+            this.attachImage = false;
+            this.attachLocation = false;
+            // dispatch(changeInputFieldHint('Type a message…'));
+            // dispatch(doInputEnabled());
           }
-        } else if (isFAQ(message) || isQR(message)) {
-          console.log('+++++++ GS handleMessageReceived Last MSG FAQ || QR +++++++', str);
+        } else if (isFAQ(message) || isQR(message) || isCarouselType1(message) || isCarouselType2(message)) {
+          console.log('+++++++ GS handleMessageReceived Last MSG FAQ || QR || CAROUSELTYPE1 +++++++', str);
           // dispatch(changeInputFieldHint('Select an option...'));
-          msg_hint = 'Select an option...'
+          msg_hint = 'Select an option...';
+        } else if (isCollectInfoType1(message)) {
+          msg_hint = '';
+        } else if (isCaptureatttype(message)) {
+          msg_hint = 'Select images...';
+          this.attachImage = true;
+        } else if (isCaptureloctype(message)) {
+          msg_hint = 'Select location...';
+          this.attachLocation = true;
         }
 
         this.onGoingMessageDelay = true;
         dispatch(triggerMessageDelayed(true));
         this.newMessageTimeout(message, msg_hint);
       } else {
-        console.log('+++++++ GS exit delay +++++++');
         this.onGoingMessageDelay = false;
-        msg_hint = 'Chat Ended...'
+        msg_hint = 'Chat Ended...';
         this.customInputEnable = false;
+        this.attachImage = false;
+        this.attachLocation = false;
         this.newMessageTimeout(message, msg_hint);
       }
     } else {
-      console.log('+++++++ GS else case +++++++');
       this.messages.push(message);
       dispatch(changeInputFieldHint(''));
       dispatch(doInputDisabled());
+      dispatch(doAttachDisabled());
+      dispatch(doAttachLocationDisabled());
     }
-
-
-
-
-    // console.log('Widget handleMessageReceived')
-    // console.log(n)
 
     if (this.msgTimeout) {
       clearTimeout(this.msgTimeout);
@@ -270,9 +257,10 @@ class Widget extends Component {
 
     if (!n) {
       this.msgTimeout = setTimeout(() => {
-        console.log('Widget Timeout hit successfully');
         dispatch(changeInputFieldHint('Chat ended due to inactivity...'));
         dispatch(doInputDisabled());
+        dispatch(doAttachDisabled());
+        dispatch(doAttachLocationDisabled());
         if (socket) {
           socket.close();
         }
@@ -280,8 +268,9 @@ class Widget extends Component {
         clearInterval(this.intervalId);
       }, 180000);
     } else {
-      console.log('111    Found Exit String');
       dispatch(doInputDisabled());
+      dispatch(doAttachDisabled());
+      dispatch(doAttachLocationDisabled());
       if (socket) {
         socket.close();
       }
@@ -298,26 +287,27 @@ class Widget extends Component {
       this.onGoingMessageDelay = false;
 
 
-      var message = this.messages.shift()
+      const message = this.messages.shift();
       const str = message.text;
       console.log('+++++++ GS popLastMessage case +++++++', str);
 
       const n = str.includes('TERMINATE_CHAT');
-      var msg_hint = '';
-      //message.get('hint');
-      //var msg_hint = '';
+      let msg_hint = '';
+      // message.get('hint');
+      // var msg_hint = '';
 
       if (!n) {
         this.onGoingMessageDelay = true;
         dispatch(triggerMessageDelayed(true));
       } else {
-        this.customInputEnable = false
-        msg_hint = 'Chat Ended...'
+        this.customInputEnable = false;
+        this.attachImage = false;
+        this.attachLocation = false;
+        msg_hint = 'Chat Ended...';
       }
 
 
-      if (!this.messages.length)
-      {
+      if (!this.messages.length) {
         console.log('+++++++ GS popLastMessage Last MSG +++++++', str);
         if (isText(message)) {
           console.log('+++++++ GS popLastMessage Last MSG text +++++++', str);
@@ -325,32 +315,59 @@ class Widget extends Component {
           if (!n) {
             // dispatch(changeInputFieldHint(''));
             // dispatch(doInputEnabled());
-            msg_hint = 'Type a message…'
-            this.customInputEnable = true
+            msg_hint = 'Type a message…';
+            this.customInputEnable = true;
+            this.attachImage = false;
+            this.attachLocation = false;
           }
-        } else if (isFAQ(message) || isQR(message)) {
+        } else if (isFAQ(message) || isQR(message || isCarouselType1(message) || isCarouselType2(message))) {
           console.log('+++++++ GS popLastMessage Last MSG FAQ || QR +++++++', str);
           // dispatch(changeInputFieldHint('Select an option...'));
-          msg_hint = 'Select an option...'
-          this.customInputEnable = false
+          msg_hint = 'Select an option...';
+          this.customInputEnable = false;
+          this.attachImage = false;
+          this.attachLocation = false;
+        } else if (isCollectInfoType1(message)) {
+          msg_hint = '';
+        } else if (isCaptureatttype(message)) {
+          msg_hint = 'Select images...';
+          this.attachImage = true;
+        } else if (isCaptureloctype(message)) {
+          msg_hint = 'Select location...';
+          this.attachLocation = true;
         }
-
-      } else {
-        if (isText(message)) {
-          console.log('+++++++ GS popLastMessage Not Last MSG text +++++++', str);
-          // dispatch(changeInputFieldHint(''));
-          // dispatch(doInputDisabled());
-          msg_hint = ''
-          this.customInputEnable = false
-        } else if (isFAQ(message) || isQR(message)) {
-          console.log('+++++++ GS popLastMessage Not Last MSG FAQ || QR +++++++', str);
-          // dispatch(changeInputFieldHint('Select an option...'));
-          msg_hint = 'Select an option...'
-          this.customInputEnable = false         
-        }
+      } else if (isText(message)) {
+        console.log('+++++++ GS popLastMessage Not Last MSG text +++++++', str);
+        // dispatch(changeInputFieldHint(''));
+        // dispatch(doInputDisabled());
+        msg_hint = '';
+        this.customInputEnable = false;
+        this.attachImage = false;
+        this.attachLocation = false;
+      } else if (isFAQ(message) || isQR(message || isCarouselType1(message) || isCarouselType2(message))) {
+        console.log('+++++++ GS popLastMessage Not Last MSG FAQ || QR +++++++', str);
+        // dispatch(changeInputFieldHint('Select an option...'));
+        msg_hint = 'Select an option...';
+        this.customInputEnable = false;
+        this.attachImage = false;
+        this.attachLocation = false;
+      } else if (isCollectInfoType1(message)) {
+        msg_hint = '';
+        this.customInputEnable = false;
+        this.attachImage = false;
+        this.attachLocation = false;
+      } else if (isCaptureatttype(message)) {
+        msg_hint = 'Select images...';
+        this.customInputEnable = false;
+        this.attachImage = true;
+        this.attachLocation = false;
+      } else if (isCaptureloctype(message)) {
+        msg_hint = 'Select location...';
+        this.customInputEnable = false;
+        this.attachImage = false;
+        this.attachLocation = true;
       }
       this.newMessageTimeout(message, msg_hint);
-
     }
   }
 
@@ -361,19 +378,30 @@ class Widget extends Component {
       this.dispatchMessage(message);
       this.delayedMessage = null;
       this.applyCustomStyle();
-
       dispatch(triggerMessageDelayed(false));
-
-      
       this.onGoingMessageDelay = false;
-
       dispatch(changeInputFieldHint(msg_hint));
       if (this.customInputEnable) {
         dispatch(doInputEnabled());
+        dispatch(doAttachDisabled());
+        dispatch(doAttachLocationDisabled());
       } else {
         dispatch(doInputDisabled());
       }
-
+      if (this.attachImage) {
+        dispatch(doAttachEnabled());
+        dispatch(doAttachLocationDisabled());
+        dispatch(doInputDisabled());
+      } else {
+        dispatch(doAttachDisabled());
+      }
+      if (this.attachLocation) {
+        dispatch(doAttachLocationEnabled());
+        dispatch(doAttachDisabled());
+        dispatch(doInputDisabled());
+      } else {
+        dispatch(doAttachLocationDisabled());
+      }
       this.popLastMessage();
     }, customMessageDelay(message.text || ''));
   }
@@ -444,6 +472,7 @@ class Widget extends Component {
 
     pageEventCallbacks.forEach((pageEvent) => {
       const { event, payload, selector } = pageEvent;
+      console.log('selector: $$', selector);
       const sendPayload = () => {
         this.sendMessage(payload);
       };
@@ -550,13 +579,10 @@ class Widget extends Component {
       tooltipDelay
     } = this.props;
 
-    console.log('++++ initializeWidget +++++');
     if (!socket.isInitialized()) {
       socket.createSocket();
 
       socket.on('bot_uttered', (botUttered) => {
-        // botUttered.attachment.payload.elements = [botUttered.attachment.payload.elements];
-        // console.log(botUttered);
         this.handleBotUtterance(botUttered);
       });
 
@@ -592,7 +618,9 @@ class Widget extends Component {
           if (sendInitPayload) {
             console.log(' GURTAJ Sending Initial Payload initPayload');
             dispatch(changeInputFieldHint(''));
-            dispatch(doInputDisabled());            
+            dispatch(doInputDisabled());
+            dispatch(doAttachDisabled());
+            dispatch(doAttachLocationDisabled());
             this.trySendInitPayload();
           }
         } else {
@@ -662,6 +690,7 @@ class Widget extends Component {
 
       // eslint-disable-next-line no-console
       console.log('sending init payload', sessionId);
+      console.log('socket:', socket);
       socket.emit('user_uttered', { message: initPayload, customData, session_id: sessionId });
       dispatch(initialize());
     }
@@ -691,7 +720,6 @@ class Widget extends Component {
   }
 
   toggleConversation() {
-    console.log('toggleConversation ');
     clearTimeout(this.botWindowSetTimeout);
     const {
       isChatOpen,
@@ -734,25 +762,46 @@ class Widget extends Component {
     console.log('+++++++ GS dispatchMessage333 +++++++', Object.keys(messageClean));
 
     if (isText(messageClean)) {
-
-      var str = messageClean.text;
+      const str = messageClean.text;
       const n = str.includes('TERMINATE_CHAT');
       if (!n) {
-        this.props.dispatch(addResponseMessage(messageClean.text));      
+        this.props.dispatch(addResponseMessage(messageClean.text));
       }
-      // this.props.dispatch(changeInputFieldHint(''));
-      // this.props.dispatch(doInputDisabled());
     } else if (isFAQ(messageClean)) {
       this.props.dispatch(addFAQReply(messageClean));
       this.props.dispatch(doInputDisabled());
+      this.props.dispatch(doAttachDisabled());
+      this.props.dispatch(doAttachLocationDisabled());
+    } else if (isCarouselType1(messageClean)) {
+      this.props.dispatch(addCarouselType1(messageClean));
+      this.props.dispatch(doInputDisabled());
+      this.props.dispatch(doAttachDisabled());
+      this.props.dispatch(doAttachLocationDisabled());
+    } else if (isCarouselType2(messageClean)) {
+      this.props.dispatch(addCarouselType2(messageClean));
+      this.props.dispatch(doInputDisabled());
+      this.props.dispatch(doAttachDisabled());
+      this.props.dispatch(doAttachLocationDisabled());
+    } else if (isCollectInfoType1(messageClean)) {
+      this.props.dispatch(addCollectInfoType1(messageClean));
+      this.props.dispatch(doInputDisabled());
+      this.props.dispatch(doAttachDisabled());
+      this.props.dispatch(doAttachLocationDisabled());
+    } else if (isCaptureatttype(messageClean)) {
+      this.props.dispatch(addCaptureatttype(messageClean));
+      this.props.dispatch(doInputDisabled());
+      this.props.dispatch(doAttachLocationDisabled());
+    } else if (isCaptureloctype(messageClean)) {
+      this.props.dispatch(addCaptureloctype(messageClean));
+      this.props.dispatch(doInputDisabled());
+      this.props.dispatch(doAttachDisabled());
     } else if (isQR(messageClean)) {
       this.props.dispatch(addQuickReply(messageClean));
       this.props.dispatch(doInputDisabled());
+      this.props.dispatch(doAttachDisabled());
+      this.props.dispatch(doAttachLocationDisabled());
     } else if (isCarousel(messageClean)) {
-      this.props.dispatch(
-        addCarousel(messageClean)
-      );
-      // this.props.dispatch(doInputDisabled());
+      this.props.dispatch(addCarousel(messageClean));
     } else if (isVideo(messageClean)) {
       const element = messageClean.attachment.payload;
       this.props.dispatch(
@@ -761,8 +810,6 @@ class Widget extends Component {
           video: element.src
         })
       );
-      // this.props.dispatch(doInputDisabled());
-
     } else if (isImage(messageClean)) {
       const element = messageClean.attachment.payload;
       this.props.dispatch(
@@ -771,15 +818,12 @@ class Widget extends Component {
           image: element.src
         })
       );
-      // this.props.dispatch(doInputDisabled());
-
     } else {
       // some custom message
       const props = messageClean;
       if (this.props.customComponent) {
         this.props.dispatch(renderCustomComponent(this.props.customComponent, props, true));
       }
-      // this.props.dispatch(doInputDisabled());
     }
     if (customCss) {
       this.props.dispatch(setCustomCss(message.customCss));
@@ -787,11 +831,10 @@ class Widget extends Component {
   }
 
   handleMessageSubmit(event) {
-    console.log(' ++++++++++++++++  Widget handleMessageSubmit ---> User typed somethings', event.target.message.value)
+    console.log(' ++++++++++++++++  Widget handleMessageSubmit ---> User typed somethings', event.target.message.value);
     this.props.dispatch(doInputDisabled());
+    // this.props.dispatch(doAttachDisabled());
     this.props.dispatch(changeInputFieldHint(''));
-    
-    clearTimeout(this.msgTimeout);
     event.preventDefault();
     const userUttered = event.target.message.value;
     if (userUttered) {
@@ -832,7 +875,8 @@ class Widget extends Component {
         resetChat={event => this.resetChatConversation(event)}
         title={this.props.title}
         bgColor={this.props.bgColor}
-        botWindowSIze={this.props.botWindowSIze}
+        botWindowWidth={this.props.botWindowWidth}
+        botWindowHeight={this.props.botWindowHeight}
         botWindowScrollStickColor={this.props.botWindowScrollStickColor}
         chatFontSize={this.props.chatFontSize}
         clientchatTextColor={this.props.clientchatTextColor}
@@ -852,6 +896,7 @@ class Widget extends Component {
         sendButtonColor={this.props.sendButtonColor}
         resetCloseButtonColor={this.props.resetCloseButtonColor}
         minWidthOfButton={this.props.minWidthOfButton}
+        widthOfButton={this.props.widthOfButton}
         minHeightOfButton={this.props.minHeightOfButton}
         horizontalSpaceBtwButton={this.props.horizontalSpaceBtwButton}
         verticalSpaceBtwButton={this.props.verticalSpaceBtwButton}
@@ -873,6 +918,7 @@ class Widget extends Component {
         placeholderTextColor={this.props.placeholderTextColor}
         inputCaretColor={this.props.inputCaretColor}
         isFooterEnabled={this.props.isFooterEnabled}
+        poweredByImage={this.props.poweredByImage}
         titleFontFamily={this.props.titleFontFamily}
         subTitleFontFamily={this.props.subTitleFontFamily}
         textFontFamily={this.props.textFontFamily}
@@ -900,6 +946,11 @@ class Widget extends Component {
         titleBoldNeeded={this.props.titleBoldNeeded}
         subtitleItalicNeeded={this.props.subtitleItalicNeeded}
         helperText={this.props.helperText}
+        button2Launcher={this.props.button2Launcher}
+        carouselType1Style={this.props.carouselType1Style}
+        carouselType2Style={this.props.carouselType2Style}
+        contactInfoStyle={this.props.contactInfoStyle}
+        isTextAreaBoxShadowEnabled={this.props.isTextAreaBoxShadowEnabled}
       />
     );
   }

@@ -30,10 +30,18 @@ class QuickReply extends PureComponent {
       chooseReply,
       id
     } = this.props;
-    console.log(' ++++++++++++++++  QR handleClick ---> ')
+
     const payload = reply.get('payload');
     const title = reply.get('title');
-    chooseReply(payload, title, id);
+    const hasHttp = title.includes('http');
+    const titleLink = title.replace(/"/g, '').split(',');
+
+    if (titleLink.length > 1) {
+      const finalLink = hasHttp ? titleLink[1] : `https://${titleLink[1]}`;
+      window.open(finalLink);
+    }
+
+    chooseReply(payload, titleLink[0], id);
     this.props.doInputDisabled();
     this.props.changeInputFieldHint('');
   }
@@ -66,11 +74,13 @@ class QuickReply extends PureComponent {
       botButtonBgColor,
       botButtonAlignment,
       minWidthOfButton,
+      widthOfButton,
       minHeightOfButton,
       horizontalSpaceBtwButton,
       verticalSpaceBtwButton,
       botTextBgColor,
-      textFontFamily
+      textFontFamily,
+      isTextAreaBoxShadowEnabled
     } = this.props;
     const chosenReply = getChosenReply(id);
     if (chosenReply) {
@@ -81,6 +91,7 @@ class QuickReply extends PureComponent {
           botChatTextColor={botChatTextColor}
           botTextBgColor={botTextBgColor}
           textFontFamily={textFontFamily}
+          isTextAreaBoxShadowEnabled={isTextAreaBoxShadowEnabled}
 
         />);
     }
@@ -92,6 +103,7 @@ class QuickReply extends PureComponent {
           botChatTextColor={botChatTextColor}
           botTextBgColor={botTextBgColor}
           textFontFamily={textFontFamily}
+          isTextAreaBoxShadowEnabled={isTextAreaBoxShadowEnabled}
         />
         {isLast && (
           <div
@@ -101,6 +113,7 @@ class QuickReply extends PureComponent {
             }}
           >
             {message.get('quick_replies').map((reply, index) => {
+              const finTitle = reply.get('title').replace(/"/g, '').split(',');
               if (reply.get('type') === 'web_url') {
                 return (
                   <a
@@ -116,6 +129,7 @@ class QuickReply extends PureComponent {
                       fontSize: chatFontSize,
                       minHeight: minHeightOfButton,
                       minWidth: minWidthOfButton,
+                      width: widthOfButton,
                       marginTop: verticalSpaceBtwButton,
                       marginRight: horizontalSpaceBtwButton
 
@@ -123,7 +137,7 @@ class QuickReply extends PureComponent {
                     onMouseEnter={e => this.handleMouseEnter(e)}
                     onMouseLeave={e => this.handleMouseLeave(e)}
                   >
-                    {reply.get('title')}
+                    {finTitle[0]}
                   </a>
                 );
               }
@@ -139,6 +153,7 @@ class QuickReply extends PureComponent {
                     fontFamily: textFontFamily,
                     minHeight: minHeightOfButton,
                     minWidth: minWidthOfButton,
+                    width: widthOfButton,
                     marginTop: verticalSpaceBtwButton,
                     marginRight: horizontalSpaceBtwButton
                   }}
@@ -146,7 +161,7 @@ class QuickReply extends PureComponent {
                   onMouseEnter={e => this.handleMouseEnter(e)}
                   onMouseLeave={e => this.handleMouseLeave(e)}
                 >
-                  {reply.get('title')}
+                  {finTitle[0]}
                 </div>
               );
             })}

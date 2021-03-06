@@ -4,6 +4,11 @@ import { MESSAGE_SENDER, SESSION_NAME } from 'constants';
 import {
   createQuickReply,
   createFAQReply,
+  createCarouselType1,
+  createCarouselType2,
+  createCollectInfoType1,
+  createCaptureatttype,
+  createCaptureloctype,
   createNewMessage,
   createCarousel,
   createVideoSnippet,
@@ -43,6 +48,21 @@ export default function (storage) {
       case actionTypes.ADD_FAQ_REPLY: {
         return storeMessage(state.push(createFAQReply(action.quickReply, MESSAGE_SENDER.RESPONSE)));
       }
+      case actionTypes.ADD_CAROUSEL_TYPE1: {
+        return storeMessage(state.push(createCarouselType1(action.quickReply, MESSAGE_SENDER.RESPONSE)));
+      }
+      case actionTypes.ADD_CAROUSEL_TYPE2: {
+        return storeMessage(state.push(createCarouselType2(action.quickReply, MESSAGE_SENDER.RESPONSE)));
+      }
+      case actionTypes.ADD_COLLECTINFO_TYPE1: {
+        return storeMessage(state.push(createCollectInfoType1(action.quickReply, MESSAGE_SENDER.RESPONSE)));
+      }
+      case actionTypes.ADD_CAPTURE_ATTYPE: {
+        return storeMessage(state.push(createCaptureatttype(action.quickReply, MESSAGE_SENDER.RESPONSE)));
+      }
+      case actionTypes.ADD_CAPTURE_LOCTYPE: {
+        return storeMessage(state.push(createCaptureloctype(action.quickReply, MESSAGE_SENDER.RESPONSE)));
+      }
       case actionTypes.ADD_COMPONENT_MESSAGE: {
         return storeMessage(state.push(createComponentMessage(action.component, action.props, action.showAvatar)));
       }
@@ -50,6 +70,21 @@ export default function (storage) {
         return storeMessage(state.setIn([action.id, 'chosenReply'], action.title));
       }
       case actionTypes.SET_FAQ_REPLY: {
+        return storeMessage(state.setIn([action.id, 'chosenReply'], action.title));
+      }
+      case actionTypes.SET_CAROUSEL_TYPE1: {
+        return storeMessage(state.setIn([action.id, 'chosenReply'], action.title));
+      }
+      case actionTypes.SET_CAROUSEL_TYPE2: {
+        return storeMessage(state.setIn([action.id, 'chosenReply'], action.title));
+      }
+      case actionTypes.SET_COLLECTINFO_TYPE1: {
+        return storeMessage(state.setIn([action.id, 'chosenReply'], action.title));
+      }
+      case actionTypes.SET_CAPTURE_ATTYPE: {
+        return storeMessage(state.setIn([action.id, 'chosenReply'], action.title));
+      }
+      case actionTypes.SET_CAPTURE_LOCTYPE: {
         return storeMessage(state.setIn([action.id, 'chosenReply'], action.title));
       }
       case actionTypes.INSERT_NEW_USER_MESSAGE: {

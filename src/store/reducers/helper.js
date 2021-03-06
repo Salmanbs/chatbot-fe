@@ -1,7 +1,7 @@
 import { Map, fromJS } from 'immutable';
 import { MESSAGES_TYPES, MESSAGE_SENDER, SESSION_NAME } from 'constants';
 
-import { Video, Image, Message, Carousel, QuickReply, FrequentQuestions } from 'messagesComponents';
+import { Video, Image, Message, Carousel, QuickReply, FrequentQuestions, CarouselType1, CarouselType2, CollectInfoType1, Captureloctype, Captureatttype } from 'messagesComponents';
 
 export function createNewMessage(text, sender) {
   return Map({
@@ -69,6 +69,76 @@ export function createFAQReply(quickReply, sender) {
     component: FrequentQuestions,
     text: quickReply.text.substr(7),
     hint: quickReply.hint || 'Select an option...',
+    quick_replies: fromJS(quickReply.quick_replies),
+    sender,
+    showAvatar: true,
+    chosenReply: null,
+    timestamp: new Date().getTime()
+  });
+}
+
+export function createCarouselType1(quickReply, sender) {
+  return Map({
+    type: MESSAGES_TYPES.CAROUSEL_TYPE1,
+    component: CarouselType1,
+    text: quickReply.text.substr(14),
+    hint: quickReply.hint || 'Select an option...',
+    quick_replies: fromJS(quickReply.quick_replies),
+    sender,
+    showAvatar: true,
+    chosenReply: null,
+    timestamp: new Date().getTime()
+  });
+}
+
+export function createCarouselType2(quickReply, sender) {
+  return Map({
+    type: MESSAGES_TYPES.CAROUSEL_TYPE2,
+    component: CarouselType2,
+    text: quickReply.text.substr(14),
+    hint: quickReply.hint || 'Select an option...',
+    quick_replies: fromJS(quickReply.quick_replies),
+    sender,
+    showAvatar: true,
+    chosenReply: null,
+    timestamp: new Date().getTime()
+  });
+}
+
+export function createCollectInfoType1(quickReply, sender) {
+  return Map({
+    type: MESSAGES_TYPES.COLLECTINFO_TYPE1,
+    component: CollectInfoType1,
+    text: quickReply.text.substr(17),
+    hint: quickReply.hint || 'Select an option...',
+    quick_replies: fromJS(quickReply.quick_replies),
+    sender,
+    showAvatar: true,
+    chosenReply: null,
+    timestamp: new Date().getTime()
+  });
+}
+
+export function createCaptureatttype(quickReply, sender) {
+  return Map({
+    type: MESSAGES_TYPES.CAPTURE_ATTYPE,
+    component: Captureatttype,
+    text: quickReply.text.substr(15),
+    hint: quickReply.hint || 'Select images...',
+    quick_replies: fromJS(quickReply.quick_replies),
+    sender,
+    showAvatar: true,
+    chosenReply: null,
+    timestamp: new Date().getTime()
+  });
+}
+
+export function createCaptureloctype(quickReply, sender) {
+  return Map({
+    type: MESSAGES_TYPES.CAPTURE_LOCTYPE,
+    component: Captureatttype,
+    text: quickReply.text.substr(15),
+    hint: quickReply.hint || 'Select location...',
     quick_replies: fromJS(quickReply.quick_replies),
     sender,
     showAvatar: true,

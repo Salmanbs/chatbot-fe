@@ -1,0 +1,133 @@
+@import "variables.scss";
+
+@import "common.scss";
+
+.#{$namespace}conversation-container {
+
+  .#{$namespace}slide {
+    display: none;
+  }
+  
+  .#{$namespace}active {
+    width: 100%;
+  }
+
+  .#{$namespace}carousalSlider {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 10px 0 20px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .#{$namespace}carousalHeader-text {
+    padding: 0 15px;
+    overflow: hidden;
+    margin-top: 11px;
+
+    .#{$namespace}markdown {
+      z-index: 1;
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .#{$namespace}carousalHeader-text::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .#{$namespace}carousalSlider-items {
+    height: 100%;
+    margin: 11px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .#{$namespace}carousalImage-box {
+    width: 100%;
+    height: 220px;
+    position: relative;
+  }
+
+  .#{$namespace}carousalImage-InsideBox {
+    overflow: hidden;
+    height: inherit;
+    width: inherit;
+  }
+
+  .#{$namespace}active .#{$namespace}carousalImage-InsideBox {
+    animation: 5s imageSlide;
+  }
+
+  @keyframes imageSlide{
+    0%  { right: -325px; opacity: 0; } /* Original Position */
+   16% { right: -325px; opacity: 0; }/* Starts moving after 16% to this position */
+   20% { right: 0px; opacity: 1; }
+   24% { right: 0px; opacity: 1; }  /* From 20% to 24% = for 1 second enter image*/
+   36% { right: 0px; opacity: 1; z-index: 0; }   /* From 24% to 36 % = for 3 seconds the image is visible */
+   40% { right: 325px; opacity: 0; z-index: 0; } /* From 36% to 40% = for 1 second exit image */
+   41% { right: -325px; opacity: 0; z-index: -1; }   /* Return to Original Position */
+   100%{ right: -325px; opacity: 0; z-index: -1; }
+ }
+
+  .#{$namespace}carousalImage {
+    object-fit: fill;
+    height: 100%;
+    width: 100%;
+  }
+
+  .#{$namespace}carousal-text1 {
+    margin: 5px 0;
+    padding: 0 10px;
+    overflow: hidden;
+  }
+
+  .#{$namespace}carousal-text1Box {
+    width: 100%;
+    position: relative;
+  }
+
+  .#{$namespace}carousal-text2 {
+    margin: 0;
+    margin-bottom: 8px;
+    padding: 0 10px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .#{$namespace}carousal-text2Box {
+    width: 100%;
+    position: relative;
+  }
+
+  .#{$namespace}carousal-text2::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .#{$namespace}carousal-button {
+    cursor: pointer;
+    border-radius: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    Outline: none;
+  }
+
+  .#{$namespace}carousal-footer {
+    position: absolute;
+    width: 100%;
+    min-height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: -1px;
+  }
+
+  .#{$namespace}carousal-pagination {
+    margin: 0;
+  }
+}
+  

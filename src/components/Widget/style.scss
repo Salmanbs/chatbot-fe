@@ -75,6 +75,10 @@
   }
 }
 
+*:after, *:before {
+  content: none;
+}
+
 .#{$namespace}widget-embedded {
   box-sizing: border-box;
   width: 100%;

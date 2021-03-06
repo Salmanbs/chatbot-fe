@@ -23,12 +23,10 @@ class FrequentQuestions extends PureComponent {
 
   handleClick(reply) {
     const { chooseReply, id } = this.props;
-    console.log(' ++++++++++++++++  QR handleClick ---> ')
 
     const payload = reply.get('payload');
     const title = reply.get('title');
     chooseReply(payload, title, id);
-    // this.props.changeInputFieldHint('Type a message...');
     this.props.doInputDisabled();
     this.props.changeInputFieldHint('');
   }
@@ -54,7 +52,8 @@ class FrequentQuestions extends PureComponent {
       faquiBgColor,
       faquiRowSeparateColor,
       botTextBgColor,
-      textFontFamily
+      textFontFamily,
+      isTextAreaBoxShadowEnabled
     } = this.props;
 
     const text = message.get('text');
@@ -67,6 +66,7 @@ class FrequentQuestions extends PureComponent {
           botChatTextColor={botChatTextColor}
           botTextBgColor={botTextBgColor}
           textFontFamily={textFontFamily}
+          isTextAreaBoxShadowEnabled={isTextAreaBoxShadowEnabled}
         />);
     }
 

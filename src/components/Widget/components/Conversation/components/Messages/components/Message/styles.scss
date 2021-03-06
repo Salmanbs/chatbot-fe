@@ -10,7 +10,6 @@
     line-height: 20px;
     display: flex;
     font-family: $fontfamily;
-    // flex-wrap: wrap;
     position: relative;
   
     .#{$namespace}markdown {
@@ -36,12 +35,12 @@
     box-sizing: content-box;
   }
   
-  /* For markdown elements created with default styles */
   .#{$namespace}message-text {
     margin: 0;
 
-    a, a:hover {
+    a, a:hover, a:visited {
       text-decoration: underline;
+      color: inherit;
     }
 
     p{

@@ -60,10 +60,19 @@
 
   .#{$namespace}close-button {
     display: none;
+    cursor: pointer;
   }
 
   .#{$namespace}reset-button {
     @include header-button-fs;
+    padding: 1px 4px;
+    cursor: pointer;
+  }
+
+  .#{$namespace}minimize-button {
+    @include header-button-fs;
+    padding: 1px 4px;
+    cursor: pointer;
   }
 
   .#{$namespace}reset {
@@ -148,3 +157,12 @@
     }
   }
 }
+// .#{$namespace}close-icon {
+//   width: 20px;
+//   height: 20px;
+
+//   @media screen and (max-width: 500px) {
+//     width: 13px;
+//     height: 13px;
+//   }
+// }

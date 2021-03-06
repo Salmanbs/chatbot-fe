@@ -1,0 +1,108 @@
+@import "variables.scss";
+
+@import "common.scss";
+
+.#{$namespace}conversation-container {
+
+  .#{$namespace}contactInfo-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: -webkit-fill-available;
+  }
+
+  .#{$namespace}contactInfo-name-box {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .#{$namespace}contactInfo-inner-box {
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .#{$namespace}contactInfo-name {
+    width: -webkit-fill-available;
+    padding: 1px 10px;
+    border-radius: 5px;
+    height: 35px;
+    box-sizing: border-box;
+    border: none;
+  }
+
+  .#{$namespace}contactInfo-name:focus {
+    outline: none;
+  }
+
+  .#{$namespace}contactInfo-email-box {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .#{$namespace}contactInfo-email {
+    width: -webkit-fill-available;
+    padding: 0 10px;
+    border-radius: 5px;
+    height: 35px;
+    box-sizing: border-box;
+    border: none;
+  }
+
+  .#{$namespace}contactInfo-email:focus {
+    outline: none;
+  }
+
+  .#{$namespace}contactInfo-phNumber-box {
+    width: 100%;
+    height: 35px;
+    margin-bottom: 15px;
+  }
+
+  .#{$namespace}contactInfo-phNumber {
+    width: -webkit-fill-available;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .#{$namespace}collectInfo-button {
+    min-height: 30px;
+    min-width: 80px;
+    padding: 3px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 5px;
+    outline: none;
+
+    p {
+      margin: 0;
+      margin-right: 6px;
+    }
+  }
+
+  .react-tel-input {
+    border-radius: 5px;
+    width: initial;
+  }
+
+  .react-tel-input .form-control {
+    height: 35px;
+    width: -webkit-fill-available;
+  }
+
+  .react-tel-input .country-list {
+    margin: 2px 0 10px -1px;
+    max-height: 150px;
+    font-size: initial;
+  }
+
+  .react-tel-input .flag-dropdown {
+    border-radius: 5px 0 0 5px;
+    border: none;
+  }
+
+  // .react-tel-input .country-list {
+  //   bottom: 100%;
+  // }
+}

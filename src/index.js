@@ -1,6 +1,7 @@
 import React, { forwardRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
+import $ from 'jquery';
 
 import Widget from './components/Widget';
 import { initStore } from '../src/store/store';
@@ -10,6 +11,7 @@ import socket from './socket';
 export let store = null;
 
 const ConnectedWidget = forwardRef((props, ref) => {
+  const [configData, setConfigData] = useState(null);
   class Socket {
     constructor(
       url,
@@ -82,16 +84,16 @@ const ConnectedWidget = forwardRef((props, ref) => {
   }
 
   const sock = new Socket(
-    props.socketUrl,
+    configData ? configData.socketUrl : props.socketUrl,
     props.customData,
-    props.socketPath,
+    configData ? configData.socketPath : props.socketPath,
     props.protocol,
     props.protocolOptions,
     props.onSocketEvent
   );
 
   const storage =
-    props.params.storage === 'session' ? sessionStorage : localStorage;
+  (configData && configData.storage === 'session') ? sessionStorage : localStorage;
   if (!store || sock.marker !== store.socketRef) {
     store = initStore(
       props.inputTextFieldHint,
@@ -104,74 +106,196 @@ const ConnectedWidget = forwardRef((props, ref) => {
     store.socketRef = sock.marker;
   }
 
+  useEffect(() => {
+    $.ajax({
+      url: `${props.baseUrl}/api/get_layout`,
+      type: 'POST',
+      processData: false,
+      contentType: false,
+      crossDomain: true,
+      headers: {
+        Authorization: 'Bearer Kailashchandra353',
+        token: 'Kailashchandra353'
+      },
+      data: JSON.stringify({ bot_id: props.customData.bot_id })
+
+    }).done((result) => {
+      const response = JSON.parse(result);
+      if (response.status == 'success') {
+        setConfigData(response.data);
+      }
+    }).fail(() => {
+      console.log('Failed!');
+    });
+  }, []);
+
   return (
     <Provider store={store}>
-      <Widget
+      { configData && <Widget
         ref={ref}
-        initPayload={props.initPayload}
-        title={props.title}
-        bgColor={props.bgColor}
-        botButtonBorderColor={props.botButtonBorderColor}
-        botButtonTextColor={props.botButtonTextColor}
-        botButtonBgColor={props.botButtonBgColor}
-        botButtonBorderColorHover={props.botButtonBorderColorHover}
-        botButtonTextColorHover={props.botButtonTextColorHover}
-        botButtonBgColorHover={props.botButtonBgColorHover}
-        botButtonAlignment={props.botButtonAlignment}
-        botWindowSIze={props.botWindowSIze}
-        botWindowScrollStickColor={props.botWindowScrollStickColor}
-        chatFontSize={props.chatFontSize}
-        clientchatTextColor={props.clientchatTextColor}
-        clientTextBgColor={props.clientTextBgColor}
-        titleColor={props.titleColor}
-        titleFontSize={props.titleFontSize}
-        subTitleColor={props.subTitleColor}
-        subTitleFontSize={props.subTitleFontSize}
-        botChatTextColor={props.botChatTextColor}
-        sendButtonColor={props.sendButtonColor}
-        botWindowOpenTime={props.botWindowOpenTime}
-        resetCloseButtonColor={props.resetCloseButtonColor}
-        minWidthOfButton={props.minWidthOfButton}
-        minHeightOfButton={props.minHeightOfButton}
-        horizontalSpaceBtwButton={props.horizontalSpaceBtwButton}
-        verticalSpaceBtwButton={props.verticalSpaceBtwButton}
-        faquiBoundaryColor={props.faquiBoundaryColor}
-        faquiHeaderBgColor={props.faquiHeaderBgColor}
-        faquiHeaderHeight={props.faquiHeaderHeight}
-        faquiHeaderFontSize={props.faquiHeaderFontSize}
-        faquiHeaderTextColor={props.faquiHeaderTextColor}
-        faquiBodyTextColor={props.faquiBodyTextColor}
-        faquiMouseOverBodyBgColor={props.faquiMouseOverBodyBgColor}
-        faquiMouseOverBodyTextColor={props.faquiMouseOverBodyTextColor}
-        faquiScrollStickColor={props.faquiScrollStickColor}
-        faquiRowHeight={props.faquiRowHeight}
-        faquiBgColor={props.faquiBgColor}
-        faquiRowSeparateColor={props.faquiRowSeparateColor}
-        chatbotBgColor={props.chatbotBgColor}
-        botTextBgColor={props.botTextBgColor}
-        userTypeWindowBgColor={props.userTypeWindowBgColor}
-        placeholderTextColor={props.placeholderTextColor}
-        inputCaretColor={props.inputCaretColor}
-        isFooterEnabled={props.isFooterEnabled}
-        titleFontFamily={props.titleFontFamily}
-        subTitleFontFamily={props.subTitleFontFamily}
-        textFontFamily={props.textFontFamily}
-        spinnerPathColor={props.spinnerPathColor}
-        spinnerRunnerColor={props.spinnerRunnerColor}
-        subtitle={props.subtitle}
+        initPayload={configData.initPayload}
+        bgColor={configData.bgColor}
+        button2Launcher={{
+          button2LauncherNeeded: configData.button2LauncherNeeded === 'true',
+          profileImageButton2: configData.profileImageButton2,
+          bgColorButton2Mousehover: configData.bgColorButton2Mousehover,
+          borderColorButton2Mousehover: configData.borderColorButton2Mousehover,
+          textColorButton2Mousehover: configData.textColorButton2Mousehover,
+          button2SlideInterval: `${configData.button2SlideInterval}s`
+        }}
+        botButtonAlignment={configData.botButtonAlignment}
+        botButtonBorderColor={configData.botButtonBorderColor}
+        botButtonTextColor={configData.botButtonTextColor}
+        botButtonBgColor={configData.botButtonBgColor}
+        botButtonBorderColorHover={configData.botButtonBorderColorHover}
+        botButtonTextColorHover={configData.botButtonTextColorHover}
+        botButtonBgColorHover={configData.botButtonBgColorHover}
+        botChatTextColor={configData.botChatTextColor}
+        botTextBgColor={configData.botTextBgColor}
+        botWindowHeight={`${configData.botWindowHeight}px`}
+        botWindowWidth={`${configData.botWindowWidth}px`}
+        botWindowScrollStickColor={configData.botWindowScrollStickColor}
+        botWindowOpenTime={+configData.botWindowOpenTime}
+        carouselType1Style={{
+          carouselType1Text1FontFamily: configData.carouselType1Text1FontFamily,
+          carouselType1Text1FontSize: configData.carouselType1Text1FontSize,
+          carouselType1Text1FontColor: configData.carouselType1Text1FontColor,
+          carouselType1Text2FontFamily: configData.carouselType1Text2FontFamily,
+          carouselType1Text2FontSize: configData.carouselType1Text2FontSize,
+          carouselType1Text2FontColor: configData.carouselType1Text2FontColor
+        }}
+        carouselType2Style={{
+          carouselType2HeaderFontFamily: configData.carouselType2HeaderFontFamily,
+          carouselType2HeaderFontSize: configData.carouselType2HeaderFontSize,
+          carouselType2HeaderFontColor: configData.carouselType2HeaderFontColor,
+          carouselType2HeaderAlignment: configData.carouselType2HeaderAlignment,
+          carouselType2HeaderHeight: `${configData.carouselType2HeaderHeight}s`,
+          carouselType2Text1FontFamily: configData.carouselType2Text1FontFamily,
+          carouselType2Text1FontSize: `${configData.carouselType2Text1FontSize}px`,
+          carouselType2Text1FontColor: configData.carouselType2Text1FontColor,
+          carouselType2Text1Alignment: configData.carouselType2Text1Alignment,
+          carouselType2Text2FontFamily: configData.carouselType2Text2FontFamily,
+          carouselType2Text2FontSize: `${configData.carouselType2Text2FontSize}px`,
+          carouselType2Text2FontColor: configData.carouselType2Text2FontColor,
+          carouselType2Text2Alignment: configData.carouselType2Text2Alignment,
+          carouselType2Text2Height: `${configData.carouselType2Text2Height}px`,
+          carouselType2Text3FontFamily: configData.carouselType2Text3FontFamily,
+          carouselType2Text3FontSize: `${configData.carouselType2Text3FontSize}px`,
+          carouselType2Text3FontColor: configData.carouselType2Text3FontColor,
+          carouselType2ButtonFontFamily: configData.carouselType2ButtonFontFamily,
+          carouselType2ButtonFontSize: `${configData.carouselType2ButtonFontSize}px`,
+          carouselType2ButtonBorderColor: configData.carouselType2ButtonBorderColor,
+          carouselType2ButtonTextColor: configData.carouselType2ButtonTextColor,
+          carouselType2ButtonBgColor: configData.carouselType2ButtonBgColor,
+          carouselType2ButtonBorderColorHover: configData.carouselType2ButtonBorderColorHover,
+          carouselType2ButtonTextColorHover: configData.carouselType2ButtonTextColorHover,
+          carouselType2ButtonBgColorHover: configData.carouselType2ButtonBgColorHover,
+          carouselType2ButtonAlignment: configData.carouselType2ButtonAlignment,
+          carouselType2MinWidthOfButton: `${configData.carouselType2MinWidthOfButton}px`,
+          carouselType2WidthOfButton: `${configData.carouselType2WidthOfButton}px`,
+          carouselType2MinHeightOfButton: `${configData.carouselType2MinHeightOfButton}px`,
+          carouselType2ArrowsColor: configData.carouselType2ArrowsColor,
+          carouselType2FooterBgColor: configData.carouselType2FooterBgColor,
+          carouselType2BgColor: configData.carouselType2BgColor,
+          carouselType2SlideInterval: +configData.carouselType2SlideInterval
+        }}
+        chatFontSize={`${configData.chatFontSize}px`}
+        chatbotBgColor={configData.chatbotBgColor}
+        clientchatTextColor={configData.clientchatTextColor}
+        clientTextBgColor={configData.clientTextBgColor}
+        contactInfoStyle={{
+          contactInfoBgColor: configData.contactInfoBgColor,
+          contactInfoInputBorderColor: configData.contactInfoInputBorderColor,
+          contactInfoInputBgColor: configData.contactInfoInputBgColor,
+          contactInfoInputFontSize: `${configData.contactInfoInputFontSize}px`,
+          contactInfoInputFontStyle: configData.contactInfoInputFontStyle,
+          contactInfoInputFontColor: configData.contactInfoInputFontColor,
+          contactInfoButtonBgColor: configData.contactInfoButtonBgColor,
+          contactInfoButtonBorderColor: configData.contactInfoButtonBorderColor,
+          contactInfoButtonTextColor: configData.contactInfoButtonTextColor,
+          contactInfoInputPlaceholderColor: configData.contactInfoInputPlaceholderColor,
+          contactInfoButtonBorderColorHover: configData.contactInfoButtonBorderColorHover,
+          contactInfoButtonTextColorHover: configData.contactInfoButtonTextColorHover,
+          contactInfoButtonBgColorHover: configData.contactInfoButtonBgColorHover,
+          contactInfoMinWidth: `${configData.contactInfoMinWidth}px`,
+          contactInfoActualWidth: `${configData.contactInfoActualWidth}px`,
+          contactInfoMinHeight: `${configData.contactInfoMinHeight}px`,
+          contactInfoHeaderFontSize: `${configData.contactInfoHeaderFontSize}px`,
+          contactInfoHeaderFontStyle: configData.contactInfoHeaderFontStyle,
+          contactInfoHeaderFontColor: configData.contactInfoHeaderFontColor
+        }}
         customData={props.customData}
-        handleNewUserMessage={props.handleNewUserMessage}
-        profileAvatar={props.profileAvatar}
-        titleAvatar={props.titleAvatar}
-        showCloseButton={props.showCloseButton}
-        showFullScreenButton={props.showFullScreenButton}
-        hideWhenNotConnected={props.hideWhenNotConnected}
-        connectOn={props.connectOn}
-        autoClearCache={props.autoClearCache}
-        fullScreenMode={props.fullScreenMode}
-        badge={props.badge}
-        embedded={props.embedded}
+        faquiBoundaryColor={configData.faquiBoundaryColor}
+        faquiHeaderBgColor={configData.faquiHeaderBgColor}
+        faquiHeaderHeight={`${configData.faquiHeaderHeight}px`}
+        faquiHeaderFontSize={`${configData.faquiHeaderFontSize}px`}
+        faquiHeaderTextColor={configData.faquiHeaderTextColor}
+        faquiBodyTextColor={configData.faquiBodyTextColor}
+        faquiMouseOverBodyBgColor={configData.faquiMouseOverBodyBgColor}
+        faquiMouseOverBodyTextColor={configData.faquiMouseOverBodyTextColor}
+        faquiScrollStickColor={configData.faquiScrollStickColor}
+        faquiRowHeight={`${configData.faquiRowHeight}px`}
+        faquiBgColor={configData.faquiBgColor}
+        faquiRowSeparateColor={configData.faquiRowSeparateColor}
+        helperText={{
+          isHelperTextNeeded: configData.isHelperTextNeeded === 'true',
+          textValue: configData.helperTextValue,
+          fontFamily: configData.helperFontFamily,
+          fontSize: `${configData.helperFontSize}px`,
+          fontColor: configData.helperFontColor,
+          textBold: configData.helperTextBold === 'true',
+          textItalic: configData.helperTextItalic === 'true',
+          bgColor: configData.helperBgColor,
+          borderColor: configData.helperBorderColor,
+          shakeInterval: `${configData.helperTextShakeInterval}s`,
+          helperTextInterval: `${configData.helperTextInterval}s`,
+          boxArrowNeeded: configData.helperBoxArrowNeeded === 'true',
+          outerBoxNeeded: configData.helperOuterBoxNeeded === 'true'
+        }}
+        horizontalSpaceBtwButton={`${configData.horizontalSpaceBtwButton}px`}
+        inputCaretColor={configData.inputCaretColor}
+        isFooterEnabled={configData.isFooterEnabled === 'true'}
+        isTextAreaBoxShadowEnabled={configData.isTextAreaBoxShadowEnabled === 'true'}
+        minWidthOfButton={`${configData.minWidthOfButton}px`}
+        minHeightOfButton={`${configData.minHeightOfButton}px`}
+        placeholderTextColor={configData.placeholderTextColor}
+        poweredByImage={configData.poweredByImage}
+        profileAvatar={configData.profileAvatar}
+        resetCloseButtonColor={configData.resetCloseButtonColor}
+        sendButtonColor={configData.sendButtonColor}
+        spinnerPathColor={configData.spinnerPathColor}
+        spinnerRunnerColor={configData.spinnerRunnerColor}
+        subTitleColor={configData.subTitleColor}
+        subTitleFontFamily={configData.subTitleFontFamily}
+        subTitleFontSize={`${configData.subTitleFontSize}px`}
+        subtitle={configData.subtitle}
+        subtitleItalicNeeded={configData.subtitleItalicNeeded === 'true'}
+        textFontFamily={configData.textFontFamily}
+        title={configData.title}
+        titleAvatar={configData.titleAvatar}
+        titleBoldNeeded={configData.titleBoldNeeded === 'true'}
+        titleColor={configData.titleColor}
+        titleFontFamily={configData.titleFontFamily}
+        titleFontSize={`${configData.titleFontSize}px`}
+        userTypeWindowBgColor={configData.userTypeWindowBgColor}
+        verticalSpaceBtwButton={`${configData.verticalSpaceBtwButton}px`}
+        widthOfButton={`${configData.widthOfButton}px`}
+
+        showCloseButton={configData.showCloseButton === 'true'}
+        fullScreenMode={configData.fullScreenMode === 'true'}
+
+        customData={props.customData}
+        hideWhenNotConnected={configData.hideWhenNotConnected === 'true'}
+        connectOn={configData.connectOn}
+        embedded={configData.embedded === 'true'}
         params={props.params}
+        customMessageDelay={props.customMessageDelay}
+        tooltipPayload={configData.tooltipPayload}
+
+        handleNewUserMessage={props.handleNewUserMessage}
+        showFullScreenButton={props.showFullScreenButton}
+        autoClearCache={configData.autoClearCache === 'true'}
+        badge={props.badge}
         storage={storage}
         openLauncherImage={props.openLauncherImage}
         closeImage={props.closeImage}
@@ -179,17 +303,12 @@ const ConnectedWidget = forwardRef((props, ref) => {
         displayUnreadCount={props.displayUnreadCount}
         socket={sock}
         showMessageDate={props.showMessageDate}
-        customMessageDelay={props.customMessageDelay}
-        tooltipPayload={props.tooltipPayload}
         tooltipDelay={props.tooltipDelay}
         disableTooltips={props.disableTooltips}
         defaultHighlightCss={props.defaultHighlightCss}
         defaultHighlightAnimation={props.defaultHighlightAnimation}
         defaultHighlightClassname={props.defaultHighlightClassname}
-        titleBoldNeeded={props.titleBoldNeeded}
-        subtitleItalicNeeded={props.subtitleItalicNeeded}
-        helperText={props.helperText}
-      />
+      /> }
     </Provider>
   );
 });

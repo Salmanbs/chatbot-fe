@@ -8,15 +8,12 @@
 }
 
 .#{$namespace}widget-container {
-  
   .#{$namespace}conversation-container{
       @media screen and (min-width: 800px){
           margin-bottom: 10px;
       }
   }
-
 }
-
 
 .#{$namespace}launcher {
   @include animation(0, 0.5s, slide-in);
@@ -31,6 +28,7 @@
   margin: 0;
   width: 60px;
   box-sizing: border-box;
+  cursor: pointer;
 
   &:focus {
     outline: none;
@@ -172,24 +170,44 @@
   }
 }
 
-.rw-helperBox,
-.rw-helperNoBox {
-  @include animation(0s, 1s, slide-from-bottom);
-  -webkit-animation-name: slide-from-bottom;
-  -webkit-animation-fill-mode: forwards; /* this prevents the animation from restarting! */
-
-  -moz-animation-name: slide-from-bottom;
-  -moz-animation-fill-mode: forwards; /* this prevents the animation from restarting! */
-
-  animation-name: slide-from-bottom;
-  animation-fill-mode: forwards; /* this prevents the animation from restarting! */
+.#{$namespace}button-Launcher {
+  display: flex;
+  position: fixed;
+  right: 0;
+  margin: 0 20px 0 0;
+  align-items: center;
+  width: max-content;
+  min-width: 85px;
+  padding: 5px 10px;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 0px 10px 1px #b5b5b5;
 }
 
-.rw-helperText {
+.#{$namespace}b2-helperText {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+}
+
+.#{$namespace}open-avatar {
+  height: 31px;
+  width: 31px;
+  border-radius: 100%;
+  margin-right: 6px;
+}
+
+.#{$namespace}helperBox,
+.#{$namespace}helperNoBox,
+.#{$namespace}button-Launcher {
+  @include animation(0s, 0.5s, slide-from-bottom);
+}
+
+.#{$namespace}helperText {
    animation: shake-animation;
 }
 
-.rw-helperTextOnly {
+.#{$namespace}helperTextOnly {
    animation: shake-text-animation;
 }
 
@@ -230,6 +248,7 @@
     transform: translate(0,0);
   }
 }
+
 @include keyframes(shake-text-animation) {
   0% {
     transform: translate(0,0);

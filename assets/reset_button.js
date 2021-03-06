@@ -18,8 +18,4 @@ const Reset = props => (
   </svg>
 );
 
-Reset.propTypes = {
-  fillColor: PropTypes.string
-};
-
 export default Reset;

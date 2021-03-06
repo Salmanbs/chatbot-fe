@@ -16,6 +16,8 @@ export default function (
     isChatVisible: true,
     isChatOpen: false,
     disabledInput: true,
+    disabledAttachImage: true,
+    disabledAttachLocation: true,
     docViewer,
     inputTextFieldHint,
     connectingText,
@@ -64,8 +66,21 @@ export default function (
       case actionTypes.TOGGLE_INPUT_DISABLED: {
         return storeParams(state.update('disabledInput', () => true));
       }
+      case actionTypes.TOGGLE_ATTACH_DISABLED: {
+        return storeParams(state.update('disabledAttach', () => true));
+      }
+      case actionTypes.TOGGLE_ATTACH_LOCATION_DISABLED: {
+        return storeParams(state.update('disabledAttachLocation', () => true));
+      }
       case actionTypes.TOGGLE_INPUT_ENABLED: {
         return storeParams(state.update('disabledInput', () => false));
+      }
+      case actionTypes.TOGGLE_ATTACH_ENABLED: {
+        return storeParams(state.update('disabledAttach', () => false));
+      }
+
+      case actionTypes.TOGGLE_ATTACH_LOCATION_ENABLED: {
+        return storeParams(state.update('disabledAttachLocation', () => false));
       }
       case actionTypes.CHANGE_INPUT_FIELD_HINT: {
         return storeParams(state.set('inputTextFieldHint', action.hint));

@@ -1,12 +1,11 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Map } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { MESSAGES_TYPES } from 'constants';
-import { Image, Message, QuickReply, FrequentQuestions } from 'messagesComponents';
+import { Image, Message, QuickReply, FrequentQuestions, CarouselType1, CarouselType2, CollectInfoType1, Captureloctype, Captureatttype } from 'messagesComponents';
 import { showTooltip as showTooltipAction } from 'actions';
-import closeIcon from 'assets/clear-button-grey.svg';
 import Close from 'assets/close_button';
 import Style from 'style-it';
 import Lancher from 'assets/launcher_button';
@@ -22,16 +21,15 @@ const Launcher = ({
   fullScreenMode,
   unreadCount,
   displayUnreadCount,
-  showTooltip,
-  lastMessage,
-  closeTooltip,
   resetCloseButtonColor,
-  helperText
+  helperText,
+  button2Launcher
 }) => {
+  const [b2SlideInterval, setB2SlideInterval] = useState(helperText.helperTextInterval);
   const className = ['rw-launcher'];
+
   if (isChatOpen) className.push('rw-hide-sm');
   if (fullScreenMode) className.push(`rw-full-screen${isChatOpen ? '  rw-hide' : ''}`);
-
 
   const getComponentToRender = (message) => {
     const ComponentToRender = (() => {
@@ -48,6 +46,21 @@ const Launcher = ({
         case MESSAGES_TYPES.FAQ_REPLY: {
           return FrequentQuestions;
         }
+        case MESSAGES_TYPES.CAROUSEL_TYPE1: {
+          return CarouselType1;
+        }
+        case MESSAGES_TYPES.CAROUSEL_TYPE2: {
+          return CarouselType2;
+        }
+        case MESSAGES_TYPES.COLLECTINFO_TYPE1: {
+          return CollectInfoType1;
+        }
+        case MESSAGES_TYPES.CAPTURE_ATTYPE: {
+          return Captureatttype;
+        }
+        case MESSAGES_TYPES.CAPTURE_LOCTYPE: {
+          return Captureatttype;
+        }
         default:
           return null;
       }
@@ -55,31 +68,13 @@ const Launcher = ({
     return <ComponentToRender id={-1} params={{}} message={message} isLast />;
   };
 
-
-  const renderToolTip = () => (
-    <div className="rw-tooltip-body">
-      <div className="rw-tooltip-close" >
-        <button onClick={(e) => { e.stopPropagation(); closeTooltip(); }}>
-          <img
-            src={closeIcon}
-            alt="close"
-          />
-        </button>
-      </div>
-      <div className="rw-tooltip-response">
-        {getComponentToRender(lastMessage)}
-      </div>
-      <div className="rw-tooltip-decoration" />
-    </div>
-  );
-
   const renderOpenLauncherImage = () => (
     <div className="rw-open-launcher__container">
       {unreadCount > 0 && displayUnreadCount && (
         <div className="rw-unread-count-pastille">{unreadCount}</div>
       )}
       <Lancher fillColor={resetCloseButtonColor} size="34px" />
-      {showTooltip && lastMessage.get('sender') === 'response' && renderToolTip()}
+      {/* {showTooltip && lastMessage.get('sender') === 'response' && renderToolTip()} */}
       {!isChatOpen && helperText.isHelperTextNeeded ? (
         helperText.outerBoxNeeded ?
           <Style>
@@ -123,6 +118,7 @@ const Launcher = ({
               animation-timing-function: ease;
               animation-iteration-count: infinite;
               transform-origin: 50% 50%;
+              display: flex;
               margin: 0px;
               padding: 0 10px;
               font-family: ${helperText.fontFamily};
@@ -133,9 +129,15 @@ const Launcher = ({
             }
           `}
             <div className="rw-helperBox">
-              <span className="rw-helperText">
-                {helperText.textValue}
-              </span>
+              <div
+                style={{
+                  display: 'inline-table'
+                }}
+              >
+                <span className="rw-helperText">
+                  {helperText.textValue}
+                </span>
+              </div>
             </div>
           </Style> :
           <Style>
@@ -176,16 +178,70 @@ const Launcher = ({
     </div>
   );
 
+  const renderOpenLauncher2 = () => (
+    <div className="rw-open-launcher__container" onClick={onToggleClicked}>
+      {unreadCount > 0 && displayUnreadCount && (
+        <div className="rw-unread-count-pastille">{unreadCount}</div>
+      )}
+      <Style>
+        {`
+          .rw-button-Launcher {
+            background-color: ${helperText.bgColor};
+            border: 1px solid ${helperText.borderColor};
+            color: ${helperText.fontColor};
+            opacity: 0;
+            -webkit-animation-delay: ${b2SlideInterval};
+            -moz-animation-delay: ${b2SlideInterval};
+            animation-delay: ${b2SlideInterval};
+          }
+
+          .rw-button-Launcher:hover {
+            background-color: ${button2Launcher.bgColorButton2Mousehover};
+            border: 1px solid ${button2Launcher.borderColorButton2Mousehover};
+            color: ${button2Launcher.textColorButton2Mousehover};
+          }
+
+          .rw-b2-helperText {
+            font-family: ${helperText.fontFamily};
+            font-size: ${helperText.fontSize};
+            color: inherit;
+            font-weight: ${helperText.textBold ? 'bold' : ''};
+            font-style: ${helperText.textItalic ? 'italic' : ''};
+          }
+        `}
+        <div className="rw-button-Launcher">
+          <img src={button2Launcher.profileImageButton2} className="rw-open-avatar" alt="chat avatar" />
+          <div className="rw-b2-helperText">
+            <div>
+              {helperText.textValue}
+            </div>
+          </div>
+        </div>
+      </Style>
+    </div>
+  );
+
+  const onToggleClicked = () => {
+    setB2SlideInterval(button2Launcher.button2SlideInterval);
+
+    toggle();
+  };
+
   return (
     <Fragment>
-      <button type="button" className={className.join(' ')} onClick={toggle} style={{ backgroundColor: bgColor }}>
-        <Badge badge={badge} />
-        {isChatOpen ? (
-          <Close classes="rw-close-launcher rw-default" fillColor={resetCloseButtonColor} size="20px" />
+      {button2Launcher.button2LauncherNeeded ?
+        (
+          isChatOpen ? null : renderOpenLauncher2()
         ) : (
-          renderOpenLauncherImage()
+          <button type="button" className={className.join(' ')} onClick={toggle} style={{ backgroundColor: bgColor }}>
+            <Badge badge={badge} />
+            {isChatOpen ? (
+              <Close classes="rw-close-launcher rw-default" fillColor={resetCloseButtonColor} size="20px" />
+            ) : (
+              renderOpenLauncherImage()
+            )}
+          </button>
         )}
-      </button>
     </Fragment>
   );
 };
@@ -198,7 +254,6 @@ Launcher.propTypes = {
   fullScreenMode: PropTypes.bool,
   unreadCount: PropTypes.number,
   displayUnreadCount: PropTypes.bool,
-  showTooltip: PropTypes.bool,
   lastMessage: ImmutablePropTypes.map
 };
 

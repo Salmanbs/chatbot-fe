@@ -6,6 +6,7 @@ import fullscreen from 'assets/fullscreen_button.svg';
 import fullscreenExit from 'assets/fullscreen_exit_button.svg';
 import Reset from 'assets/reset_button';
 import Close from 'assets/close_button';
+import Minus from 'assets/minus_button';
 import { changeInputFieldHint } from 'actions';
 import './style.scss';
 
@@ -32,7 +33,8 @@ const Header = ({
   subTitleFontFamily,
   changeInputFieldHint,
   titleBoldNeeded,
-  subtitleItalicNeeded
+  subtitleItalicNeeded,
+  button2Launcher
 }) => {
   const onReset = () => {
     resetChat();
@@ -52,6 +54,12 @@ const Header = ({
             <Reset fillColor={resetCloseButtonColor} />
           </button>
           {
+            button2Launcher.button2LauncherNeeded &&
+            <button disabled={!connected} className="rw-minimize-button" onClick={toggleChat} style={{ backgroundColor: bgColor }}>
+              <Minus fillColor={resetCloseButtonColor} />
+            </button>
+          }
+          {
             showFullScreenButton &&
             <button className="rw-toggle-fullscreen-button" onClick={toggleFullScreen}>
               <img
@@ -62,9 +70,9 @@ const Header = ({
             </button>
           }
           {
-            showCloseButton &&
+            showCloseButton && !button2Launcher.button2LauncherNeeded &&
             <button className="rw-close-button" onClick={toggleChat} style={{ backgroundColor: bgColor }}>
-              <Close fillColor={resetCloseButtonColor} size="20px" />
+              <Close fillColor={resetCloseButtonColor} size="13px" />
             </button>
           }
         </div>

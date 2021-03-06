@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import Style from 'style-it';
+import $ from 'jquery';
 
 import { MESSAGES_TYPES } from 'constants';
-import { Video, Image, Message, Carousel, QuickReply, FrequentQuestions } from 'messagesComponents';
+import { Video, Image, Message, Carousel, QuickReply, FrequentQuestions, CarouselType1, CarouselType2, CollectInfoType1, Captureloctype, Captureatttype } from 'messagesComponents';
 
 import './styles.scss';
 
@@ -35,6 +36,9 @@ class Messages extends Component {
   }
 
   componentDidUpdate() {
+    for (let c = document.getElementById('tosall-chatbot').getElementsByTagName('a'), a = 0; a < c.length; a++) {
+      const b = c[a]; b.getAttribute('href') && b.hostname !== location.hostname && (b.target = '_blank');
+    }
     scrollToBottom();
   }
 
@@ -54,6 +58,7 @@ class Messages extends Component {
       botButtonBgColorHover,
       botButtonAlignment,
       minWidthOfButton,
+      widthOfButton,
       minHeightOfButton,
       horizontalSpaceBtwButton,
       verticalSpaceBtwButton,
@@ -71,9 +76,13 @@ class Messages extends Component {
       faquiRowSeparateColor,
       botTextBgColor,
       textFontFamily,
-      spinnerPathColor,
-      spinnerRunnerColor
+      carouselType1Style,
+      carouselType2Style,
+      botWindowScrollStickColor,
+      contactInfoStyle,
+      isTextAreaBoxShadowEnabled
     } = this.props;
+
     const ComponentToRender = (() => {
       switch (message.get('type')) {
         case MESSAGES_TYPES.TEXT: {
@@ -93,6 +102,21 @@ class Messages extends Component {
         }
         case MESSAGES_TYPES.FAQ_REPLY: {
           return FrequentQuestions;
+        }
+        case MESSAGES_TYPES.CAROUSEL_TYPE1: {
+          return CarouselType1;
+        }
+        case MESSAGES_TYPES.CAROUSEL_TYPE2: {
+          return CarouselType2;
+        }
+        case MESSAGES_TYPES.COLLECTINFO_TYPE1: {
+          return CollectInfoType1;
+        }
+        case MESSAGES_TYPES.CAPTURE_ATTYPE: {
+          return Captureatttype;
+        }
+        case MESSAGES_TYPES.CAPTURE_LOCTYPE: {
+          return Captureatttype;
         }
         case MESSAGES_TYPES.CUSTOM_COMPONENT:
           return connect(
@@ -121,6 +145,7 @@ class Messages extends Component {
           botButtonBgColorHover={botButtonBgColorHover}
           botButtonAlignment={botButtonAlignment}
           minWidthOfButton={minWidthOfButton}
+          widthOfButton={widthOfButton}
           minHeightOfButton={minHeightOfButton}
           horizontalSpaceBtwButton={horizontalSpaceBtwButton}
           verticalSpaceBtwButton={verticalSpaceBtwButton}
@@ -138,6 +163,11 @@ class Messages extends Component {
           faquiRowSeparateColor={faquiRowSeparateColor}
           botTextBgColor={botTextBgColor}
           textFontFamily={textFontFamily}
+          carouselType1Style={carouselType1Style}
+          carouselType2Style={carouselType2Style}
+          botWindowScrollStickColor={botWindowScrollStickColor}
+          contactInfoStyle={contactInfoStyle}
+          isTextAreaBoxShadowEnabled={isTextAreaBoxShadowEnabled}
         />);
     }
     return (
@@ -159,6 +189,7 @@ class Messages extends Component {
         botButtonBgColorHover={botButtonBgColorHover}
         botButtonAlignment={botButtonAlignment}
         minWidthOfButton={minWidthOfButton}
+        widthOfButton={widthOfButton}
         minHeightOfButton={minHeightOfButton}
         horizontalSpaceBtwButton={horizontalSpaceBtwButton}
         verticalSpaceBtwButton={verticalSpaceBtwButton}
@@ -176,6 +207,11 @@ class Messages extends Component {
         faquiRowSeparateColor={faquiRowSeparateColor}
         botTextBgColor={botTextBgColor}
         textFontFamily={textFontFamily}
+        carouselType1Style={carouselType1Style}
+        carouselType2Style={carouselType2Style}
+        botWindowScrollStickColor={botWindowScrollStickColor}
+        contactInfoStyle={contactInfoStyle}
+        isTextAreaBoxShadowEnabled={isTextAreaBoxShadowEnabled}
       />);
   }
 
@@ -191,7 +227,9 @@ class Messages extends Component {
       botChatTextColor,
       bgColor,
       spinnerPathColor,
-      spinnerRunnerColor
+      spinnerRunnerColor,
+      botWindowHeight,
+      isFooterEnabled
     } = this.props;
 
     const renderMessages = () => {
@@ -219,17 +257,19 @@ class Messages extends Component {
           : null;
       };
 
-      const renderMessage = (message, index) => (
-        <div className={`rw-message ${profileAvatar && 'rw-with-avatar'}`} key={index}>
-          {
-            profileAvatar &&
+      const renderMessage = (message, index) => {
+        if (message.get('type') !== MESSAGES_TYPES.CAPTURE_ATTYPE && message.get('type') !== MESSAGES_TYPES.CAPTURE_LOCTYPE) {
+          return (<div className={`rw-message ${profileAvatar && 'rw-with-avatar'}`} key={index}>
+            {
+              profileAvatar &&
             message.get('showAvatar') &&
             <img src={profileAvatar} className="rw-avatar" alt="profile" />
-          }
-          {this.getComponentToRender(message, index, index === messages.size - 1)}
-          {renderMessageDate(message)}
-        </div>
-      );
+            }
+            {this.getComponentToRender(message, index, index === messages.size - 1)}
+            {renderMessageDate(message)}
+          </div>);
+        }
+      };
 
       messages.forEach((msg, index) => {
         if (group === null || group.from !== msg.get('sender')) {
@@ -240,19 +280,18 @@ class Messages extends Component {
             messages: []
           };
         }
-
-        group.messages.push(renderMessage(msg, index));
+        if (msg.get('type') != MESSAGES_TYPES.CAPTURE_ATTYPE && msg.get('type') != MESSAGES_TYPES.CAPTURE_LOCTYPE) {
+          group.messages.push(renderMessage(msg, index));
+        }
       });
 
       groups.push(group); // finally push last group of messages.
 
-      return groups.map((g, index) =>
-        // here put logic to decide placeholder
-        (
-          <div className={`rw-group-message rw-from-${g.from}`} key={`group_${index}`} style={{ fontSize: chatFontSize }}>
-            {g.messages}
-          </div>
-        )
+      return groups.map((g, index) => (
+        <div className={`rw-group-message rw-from-${g.from}`} key={`group_${index}`} style={{ fontSize: chatFontSize }}>
+          {g.messages}
+        </div>
+      )
       );
     };
 

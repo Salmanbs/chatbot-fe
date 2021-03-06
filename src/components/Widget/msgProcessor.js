@@ -22,7 +22,11 @@ export function isImage(message) {
 }
 
 export function isText(message) {
-  return Object.keys(message).length === 1 && Object.keys(message).includes('text');
+  return Object.keys(message).length === 1 &&
+          Object.keys(message).includes('text')
+          && !message.text.includes('collectinfotype1')
+          && !message.text.includes('captureatttype')
+          && !message.text.includes('captureloctype');
 }
 
 export function isQR(message) {
@@ -35,4 +39,31 @@ export function isFAQ(message) {
   return Object.keys(message).length === 2
     && message.text.includes('FAQFAQ')
     && Object.keys(message).includes('quick_replies');
+}
+
+export function isCarouselType1(message) {
+  return Object.keys(message).length === 2
+    && message.text.includes('carouseltype1')
+    && Object.keys(message).includes('quick_replies');
+}
+
+export function isCarouselType2(message) {
+  return Object.keys(message).length === 2
+    && message.text.includes('carouseltype2')
+    && Object.keys(message).includes('quick_replies');
+}
+
+export function isCollectInfoType1(message) {
+  return Object.keys(message).length === 1
+    && message.text.includes('collectinfotype1');
+}
+
+export function isCaptureatttype(message) {
+  return Object.keys(message).length === 1
+    && message.text.includes('captureatttype');
+}
+
+export function isCaptureloctype(message) {
+  return Object.keys(message).length === 1
+    && message.text.includes('captureloctype');
 }

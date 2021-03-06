@@ -53,6 +53,26 @@ export function addFAQReply(quickReply) {
   store.dispatch(actions.addFAQReply(quickReply));
 }
 
+export function addCarouselType1(quickReply) {
+  store.dispatch(actions.addCarouselType1(quickReply));
+}
+
+export function addCarouselType2(quickReply) {
+  store.dispatch(actions.addCarouselType2(quickReply));
+}
+
+export function addCollectInfoType1(quickReply) {
+  store.dispatch(actions.addCollectInfoType1(quickReply));
+}
+
+export function addCaptureatttype(quickReply) {
+  store.dispatch(actions.addCaptureatttype(quickReply));
+}
+
+export function addCaptureloctype(quickReply) {
+  store.dispatch(actions.addCaptureloctype(quickReply));
+}
+
 export function setQuickReply(id, title) {
   store.dispatch(actions.setQuickReply(id, title));
 }
@@ -93,8 +113,24 @@ export function doInputDisabled() {
   store.dispatch(actions.doInputDisabled());
 }
 
+export function doAttachDisabled() {
+  store.dispatch(actions.doAttachDisabled());
+}
+
+export function doAttachLocationDisabled() {
+  store.dispatch(actions.doAttachLocationDisabled());
+}
+
 export function doInputEnabled() {
   store.dispatch(actions.doInputEnabled());
+}
+
+export function doAttachEnabled() {
+  store.dispatch(actions.doAttachEnabled());
+}
+
+export function doAttachLocationEnabled() {
+  store.dispatch(actions.doAttachLocationEnabled());
 }
 
 export function changeInputFieldHint(hint) {

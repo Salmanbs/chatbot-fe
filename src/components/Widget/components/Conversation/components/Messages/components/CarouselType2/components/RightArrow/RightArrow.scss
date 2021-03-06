@@ -1,0 +1,14 @@
+@import "variables.scss";
+
+@import "common.scss";
+
+.#{$namespace}conversation-container {
+
+  .#{$namespace}rightArrow-box {
+    position: absolute;
+    right: 15px;
+    z-index: 1;
+    cursor: pointer;
+  }
+}
+  

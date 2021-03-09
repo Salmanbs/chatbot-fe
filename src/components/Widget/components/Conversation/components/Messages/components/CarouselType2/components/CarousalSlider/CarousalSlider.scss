@@ -64,10 +64,7 @@
   }
 
   @keyframes imageSlide{
-      0%  { right: -325px; opacity: 0; }
-    25% { right: 0px; opacity: 0.25; }
-    50% { right: 200px; opacity: 0.50; }
-    75% { right: 300px; opacity: 0.75; }
+      0%  { right: -325px; opacity: 1; }
     100% { right: 325px; opacity: 1; }
   }
 

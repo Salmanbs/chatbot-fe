@@ -41,7 +41,7 @@ class Message extends PureComponent {
     }
 
     return (
-      text ?
+      text.trim() ?
         <div
           className={sender === 'response' && customCss && customCss.style === 'class' ?
             `rw-response ${customCss.css}` :

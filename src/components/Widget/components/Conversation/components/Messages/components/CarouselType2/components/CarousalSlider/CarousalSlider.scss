@@ -64,15 +64,12 @@
   }
 
   @keyframes imageSlide{
-    0%  { right: -325px; opacity: 0; } /* Original Position */
-   16% { right: -325px; opacity: 0; }/* Starts moving after 16% to this position */
-   20% { right: 0px; opacity: 1; }
-   24% { right: 0px; opacity: 1; }  /* From 20% to 24% = for 1 second enter image*/
-   36% { right: 0px; opacity: 1; z-index: 0; }   /* From 24% to 36 % = for 3 seconds the image is visible */
-   40% { right: 325px; opacity: 0; z-index: 0; } /* From 36% to 40% = for 1 second exit image */
-   41% { right: -325px; opacity: 0; z-index: -1; }   /* Return to Original Position */
-   100%{ right: -325px; opacity: 0; z-index: -1; }
- }
+      0%  { right: -325px; opacity: 0; }
+    25% { right: 0px; opacity: 0.25; }
+    50% { right: 200px; opacity: 0.50; }
+    75% { right: 300px; opacity: 0.75; }
+    100% { right: 325px; opacity: 1; }
+  }
 
   .#{$namespace}carousalImage {
     object-fit: fill;

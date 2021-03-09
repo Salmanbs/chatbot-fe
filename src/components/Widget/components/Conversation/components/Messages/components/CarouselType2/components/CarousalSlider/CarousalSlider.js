@@ -104,7 +104,7 @@ const CarousalSlider = (props) => {
             <div className="rw-carousalImage-box">
               <div className="rw-carousalImage-InsideBox">
                 {
-                  carousalData.imageSrc.includes('.jpg' || '.jpeg') ?
+                  carousalData.imageSrc.includes('.jpg' || '.jpeg' || '.png') ?
                     <img className="rw-carousalImage" src={carousalData.imageSrc} alt="" />
                     : <iframe className="rw-carousalImage" src={carousalData.imageSrc} scrolling="no" />
                 }

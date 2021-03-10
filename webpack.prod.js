@@ -9,7 +9,7 @@ module.exports = [{
   output: {
     path: path.join(__dirname, '/lib'),
     filename: 'index.js',
-    library: 'WebChat',
+    library: 'bChat',
     libraryTarget: 'umd'
   },
   resolve: {
@@ -66,7 +66,7 @@ module.exports = [{
   output: {
     path: path.join(__dirname, '/module'),
     filename: 'index.js',
-    library: 'WebChat',
+    library: 'bChat',
     libraryTarget: 'umd'
   },
   resolve: {

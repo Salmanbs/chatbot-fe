@@ -105,8 +105,14 @@ const CarousalSlider = (props) => {
               <div className="rw-carousalImage-InsideBox">
                 {
                   carousalData.imageSrc.includes('.jpg' || '.jpeg' || '.png') ?
-                    <img className="rw-carousalImage" src={carousalData.imageSrc} alt="" />
-                    : <iframe className="rw-carousalImage" src={carousalData.imageSrc} scrolling="no" />
+                    <img className="rw-carousalImage" src={carousalData.imageSrc} alt="" /> :
+                    <video className="rw-carousalImage" width="100%" height="100%" controls>
+                      <source src={carousalData.imageSrc} type="video/mp4" />
+                      <source src={carousalData.imageSrc} type="video/ogg" />
+                      <source src={carousalData.imageSrc} type="video/webm" />
+                      Your browser does not support the video tag.
+                    </video>
+                    // : <iframe className="rw-carousalImage" src={carousalData.imageSrc} scrolling="no" />
                 }
               </div>
               <div className="rw-carousal-footer">

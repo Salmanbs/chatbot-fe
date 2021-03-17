@@ -100,6 +100,7 @@ const Conversation = props =>
         botWindowHeight={props.botWindowHeight}
         contactInfoStyle={props.contactInfoStyle}
         isTextAreaBoxShadowEnabled={props.isTextAreaBoxShadowEnabled}
+        downloadOptions={props.downloadOptions}
       />
       <Sender
         connected={props.connected}
@@ -147,7 +148,8 @@ Conversation.propTypes = {
   connectingText: PropTypes.string,
   closeImage: PropTypes.string,
   customComponent: PropTypes.func,
-  showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
+  showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+  downloadOptions: PropTypes.shape({})
 };
 
 export default Conversation;

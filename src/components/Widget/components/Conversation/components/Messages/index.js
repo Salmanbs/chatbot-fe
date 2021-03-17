@@ -30,6 +30,40 @@ const scrollToBottom = () => {
   }
 };
 
+const forceDownload =  (url, fileName) => {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.responseType = "blob";
+  xhr.onload = function(){
+      var urlCreator = window.URL || window.webkitURL;
+      var imageUrl = urlCreator.createObjectURL(this.response);
+      var tag = document.createElement('a');
+      tag.href = imageUrl;
+      tag.download = fileName;
+      document.body.appendChild(tag);
+      tag.click();
+      document.body.removeChild(tag);
+  }
+  xhr.send();
+}
+
+
+const download = (image) => {
+  const forcedDownload = false;
+  const fileName = image.substring(image.lastIndexOf('/')+1);
+  if(forcedDownload){
+    forceDownload(image, fileName)
+  } else {
+    let link = document.createElement('a');
+    link.href = image;
+    link.target= "_blank";
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+};
+
 class Messages extends Component {
   componentDidMount() {
     scrollToBottom();
@@ -80,7 +114,8 @@ class Messages extends Component {
       carouselType2Style,
       botWindowScrollStickColor,
       contactInfoStyle,
-      isTextAreaBoxShadowEnabled
+      isTextAreaBoxShadowEnabled,
+      downloadOptions
     } = this.props;
 
     const ComponentToRender = (() => {
@@ -168,6 +203,8 @@ class Messages extends Component {
           botWindowScrollStickColor={botWindowScrollStickColor}
           contactInfoStyle={contactInfoStyle}
           isTextAreaBoxShadowEnabled={isTextAreaBoxShadowEnabled}
+          downloadOptions={downloadOptions}
+          download={download}
         />);
     }
     return (
@@ -212,6 +249,8 @@ class Messages extends Component {
         botWindowScrollStickColor={botWindowScrollStickColor}
         contactInfoStyle={contactInfoStyle}
         isTextAreaBoxShadowEnabled={isTextAreaBoxShadowEnabled}
+        downloadOptions={downloadOptions}
+        download={download}
       />);
   }
 
@@ -365,7 +404,8 @@ Messages.propTypes = {
   profileAvatar: PropTypes.string,
   customComponent: PropTypes.func,
   showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-  displayTypingIndication: PropTypes.bool
+  displayTypingIndication: PropTypes.bool,
+  downloadOptions: PropTypes.shape({})
 };
 
 Message.defaultTypes = {

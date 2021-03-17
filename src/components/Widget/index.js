@@ -951,6 +951,7 @@ class Widget extends Component {
         carouselType2Style={this.props.carouselType2Style}
         contactInfoStyle={this.props.contactInfoStyle}
         isTextAreaBoxShadowEnabled={this.props.isTextAreaBoxShadowEnabled}
+        downloadOptions={this.props.downloadOptions}
       />
     );
   }
@@ -1002,7 +1003,8 @@ Widget.propTypes = {
   disableTooltips: PropTypes.bool,
   defaultHighlightAnimation: PropTypes.string,
   defaultHighlightCss: PropTypes.string,
-  defaultHighlightClassname: PropTypes.string
+  defaultHighlightClassname: PropTypes.string,
+  downloadOptions: PropTypes.shape({})
 };
 
 Widget.defaultProps = {

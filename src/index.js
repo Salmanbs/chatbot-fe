@@ -225,6 +225,11 @@ const ConnectedWidget = forwardRef((props, ref) => {
           contactInfoHeaderFontColor: configData.contactInfoHeaderFontColor
         }}
         customData={props.customData}
+        downloadOptions={{
+          show: configData.displayImageDownloadIcon,
+          backgroundColor: `#${configData.displayImageDownloadIconBgColor}`,
+          iconColor: `#${configData.displayImageDownloadIconColor}`
+        }}
         faquiBoundaryColor={configData.faquiBoundaryColor}
         faquiHeaderBgColor={configData.faquiHeaderBgColor}
         faquiHeaderHeight={`${configData.faquiHeaderHeight}px`}
@@ -284,11 +289,18 @@ const ConnectedWidget = forwardRef((props, ref) => {
         showCloseButton={configData.showCloseButton === 'true'}
         fullScreenMode={configData.fullScreenMode === 'true'}
 
-        customData={props.customData}
         hideWhenNotConnected={configData.hideWhenNotConnected === 'true'}
         connectOn={configData.connectOn}
         embedded={configData.embedded === 'true'}
-        params={props.params}
+        params={{
+          storage: 'session',
+          images: {
+            dims: {
+              width: `${configData.displayImagewidth}px`
+            },
+            backgroundColor: `#${configData.displayImagebgcolor}`
+          }
+        }}
         customMessageDelay={props.customMessageDelay}
         tooltipPayload={configData.tooltipPayload}
 
@@ -373,7 +385,13 @@ ConnectedWidget.defaultProps = {
   badge: 0,
   embedded: false,
   params: {
-    storage: 'local'
+    storage: 'session',
+    images: {
+      dims: {
+        width: 0
+      },
+      backgroundColor: '#000'
+    }
   },
   docViewer: false,
   showCloseButton: true,

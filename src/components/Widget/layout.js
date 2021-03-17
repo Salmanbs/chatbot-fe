@@ -102,6 +102,7 @@ const WidgetLayout = (props) => {
           carouselType2Style={props.carouselType2Style}
           contactInfoStyle={props.contactInfoStyle}
           isTextAreaBoxShadowEnabled={props.isTextAreaBoxShadowEnabled}
+          downloadOptions={props.downloadOptions}
         />
       )}
       {!props.embedded && (
@@ -168,7 +169,8 @@ WidgetLayout.propTypes = {
   customComponent: PropTypes.func,
   displayUnreadCount: PropTypes.bool,
   showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-  tooltipPayload: PropTypes.string
+  tooltipPayload: PropTypes.string,
+  downloadOptions: PropTypes.shape({})
 };
 
 export default connect(mapStateToProps)(WidgetLayout);

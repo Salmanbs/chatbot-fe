@@ -106,7 +106,7 @@ const CarousalSlider = (props) => {
                 {
                   carousalData.imageSrc.includes('.jpg' || '.jpeg' || '.png') ?
                     <img className="rw-carousalImage" src={carousalData.imageSrc} alt="" /> :
-                    <video className="rw-carousalImage" allowFullScreen="allow" width="100%" height="100%" controls autoPlay>
+                    <video className="rw-carousalImage" allowFullScreen="allow" width="100%" height="100%" controls>
                       <source src={carousalData.imageSrc} type="video/mp4" />
                       <source src={carousalData.imageSrc} type="video/ogg" />
                       <source src={carousalData.imageSrc} type="video/webm" />

@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { Fragment, PureComponent } from 'react';
-import { connect } from 'react-redux';
+import { addUserMessage, changeInputFieldHint, doAttachDisabled, doAttachLocationDisabled, doInputDisabled, doInputEnabled, emitUserMessage, setCarouselType1, setQuickReply } from 'actions';
+import React, { PureComponent } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { addUserMessage, emitUserMessage, setQuickReply, setCarouselType1, doInputDisabled, doAttachDisabled, doAttachLocationDisabled, doInputEnabled, changeInputFieldHint } from 'actions';
+import { connect } from 'react-redux';
 import Style from 'style-it';
 import Message from '../Message/index';
-
 import './styles.scss';
+
 
 class CarouselType1 extends PureComponent {
   constructor(props) {
@@ -126,7 +126,7 @@ class CarouselType1 extends PureComponent {
     });
 
     return (
-      <div>
+      <div style={{ width: '100%' }}>
         <Message
           message={message}
           chatFontSize={chatFontSize}

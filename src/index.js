@@ -1,11 +1,11 @@
-import React, { forwardRef, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Provider } from 'react-redux';
 import $ from 'jquery';
-
-import Widget from './components/Widget';
+import PropTypes from 'prop-types';
+import React, { forwardRef, useEffect, useState } from 'react';
+import { Provider } from 'react-redux';
 import { initStore } from '../src/store/store';
+import Widget from './components/Widget';
 import socket from './socket';
+
 
 // eslint-disable-next-line import/no-mutable-exports
 export let store = null;
@@ -276,6 +276,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
         subtitle={configData.subtitle}
         subtitleItalicNeeded={configData.subtitleItalicNeeded === 'true'}
         textFontFamily={configData.textFontFamily}
+        timeout={configData.timeout}
         title={configData.title}
         titleAvatar={configData.titleAvatar}
         titleBoldNeeded={configData.titleBoldNeeded === 'true'}

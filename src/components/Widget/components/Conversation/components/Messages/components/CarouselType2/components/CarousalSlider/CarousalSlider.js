@@ -1,10 +1,10 @@
 import React from 'react';
-import Style from 'style-it';
 import ReactMarkdown from 'react-markdown';
+import Style from 'style-it';
 import LeftArrow from '../LeftArrow/LeftArrow';
 import RightArrow from '../RightArrow/RightArrow';
-
 import './CarousalSlider.scss';
+
 
 const CarousalSlider = (props) => {
   const {
@@ -106,12 +106,18 @@ const CarousalSlider = (props) => {
                 {
                   carousalData.imageSrc.includes('.jpg' || '.jpeg' || '.png') ?
                     <img className="rw-carousalImage" src={carousalData.imageSrc} alt="" /> :
+                    carousalData.imageSrc.includes('.mp4' || '.ogg' || '.webm') ? 
                     <video className="rw-carousalImage" allowFullScreen="allow" width="100%" height="100%" controls>
                       <source src={carousalData.imageSrc} type="video/mp4" />
                       <source src={carousalData.imageSrc} type="video/ogg" />
                       <source src={carousalData.imageSrc} type="video/webm" />
                       Your browser does not support the video tag.
-                    </video>
+                    </video> :
+                    <iframe
+                      width="100%"
+                      height="90%"
+                      src={carousalData.imageSrc}
+                    />
                 }
               </div>
               <div className="rw-carousal-footer">

@@ -1,47 +1,47 @@
 import {
-  addCaptureatttype,
-  addCaptureloctype,
-  addCarousel,
-  addCarouselType1,
-  addCarouselType2,
-  addCollectInfoType1,
-  addFAQReply,
-  addImageSnippet,
-  addQuickReply,
-  addResponseMessage,
-  addUserMessage,
-  addVideoSnippet,
-  changeInputFieldHint,
-  changeOldUrl,
-  clearMetadata,
-  closeChat,
-  connectServer,
-  disconnectServer,
-  doAttachDisabled,
-  doAttachEnabled,
-  doAttachLocationDisabled,
-  doAttachLocationEnabled,
-  doInputDisabled,
-  doInputEnabled,
-  emitMessageIfFirst,
-  emitUserMessage,
-  evalUrl,
-  initialize,
-  newUnreadMessage,
-  openChat,
-  pullSession,
-  renderCustomComponent,
-  setCustomCss,
-  setDomHighlight,
-  setLinkTarget,
-  setPageChangeCallbacks,
-  setUserInput,
-  showChat,
-  showTooltip,
-  toggleChat,
-  toggleFullScreen,
-  triggerMessageDelayed,
-  triggerTooltipSent
+    addCaptureatttype,
+    addCaptureloctype,
+    addCarousel,
+    addCarouselType1,
+    addCarouselType2,
+    addCollectInfoType1,
+    addFAQReply,
+    addImageSnippet,
+    addQuickReply,
+    addResponseMessage,
+    addUserMessage,
+    addVideoSnippet,
+    changeInputFieldHint,
+    changeOldUrl,
+    clearMetadata,
+    closeChat,
+    connectServer,
+    disconnectServer,
+    doAttachDisabled,
+    doAttachEnabled,
+    doAttachLocationDisabled,
+    doAttachLocationEnabled,
+    doInputDisabled,
+    doInputEnabled,
+    emitMessageIfFirst,
+    emitUserMessage,
+    evalUrl,
+    initialize,
+    newUnreadMessage,
+    openChat,
+    pullSession,
+    renderCustomComponent,
+    setCustomCss,
+    setDomHighlight,
+    setLinkTarget,
+    setPageChangeCallbacks,
+    setUserInput,
+    showChat,
+    showTooltip,
+    toggleChat,
+    toggleFullScreen,
+    triggerMessageDelayed,
+    triggerTooltipSent
 } from 'actions';
 import { NEXT_MESSAGE, SESSION_NAME } from 'constants';
 import PropTypes from 'prop-types';
@@ -50,17 +50,17 @@ import { connect } from 'react-redux';
 import { getLocalSession, storeLocalSession } from '../../store/reducers/helper';
 import WidgetLayout from './layout';
 import {
-  isCaptureatttype,
-  isCaptureloctype,
-  isCarousel,
-  isCarouselType1,
-  isCarouselType2,
-  isCollectInfoType1,
-  isFAQ,
-  isImage,
-  isQR,
-  isText,
-  isVideo
+    isCaptureatttype,
+    isCaptureloctype,
+    isCarousel,
+    isCarouselType1,
+    isCarouselType2,
+    isCollectInfoType1,
+    isFAQ,
+    isImage,
+    isQR,
+    isText,
+    isVideo
 } from './msgProcessor';
 
 class Widget extends Component {
@@ -291,7 +291,7 @@ class Widget extends Component {
                 }
                 clearTimeout(this.tooltipTimeout);
                 clearInterval(this.intervalId);
-            }, this.props.timeout * 1000);
+            }, 18000);
         } else {
             dispatch(doInputDisabled());
             dispatch(doAttachDisabled());

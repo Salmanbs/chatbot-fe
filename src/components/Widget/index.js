@@ -291,7 +291,7 @@ class Widget extends Component {
                 }
                 clearTimeout(this.tooltipTimeout);
                 clearInterval(this.intervalId);
-            }, 18000);
+            }, 180000);
         } else {
             dispatch(doInputDisabled());
             dispatch(doAttachDisabled());

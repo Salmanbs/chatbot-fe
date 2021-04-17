@@ -281,17 +281,22 @@ class Widget extends Component {
         }
 
         if (!n) {
-            this.msgTimeout = setTimeout(() => {
-                dispatch(changeInputFieldHint('Chat ended due to inactivity...'));
-                dispatch(doInputDisabled());
-                dispatch(doAttachDisabled());
-                dispatch(doAttachLocationDisabled());
-                if (socket) {
-                    socket.close();
-                }
-                clearTimeout(this.tooltipTimeout);
-                clearInterval(this.intervalId);
-            }, 180000);
+            if (this.props.timeout == 0 ) {
+                console.log('+++++++ handleMessageReceived Infinite timeout +++++++',
+                    this.props.timeout);
+            } else {
+                this.msgTimeout = setTimeout(() => {
+                    dispatch(changeInputFieldHint('Chat ended due to inactivity...'));
+                    dispatch(doInputDisabled());
+                    dispatch(doAttachDisabled());
+                    dispatch(doAttachLocationDisabled());
+                    if (socket) {
+                        socket.close();
+                    }
+                    clearTimeout(this.tooltipTimeout);
+                    clearInterval(this.intervalId);
+                }, this.props.timeout * 1000);
+            }
         } else {
             dispatch(doInputDisabled());
             dispatch(doAttachDisabled());

@@ -71,8 +71,8 @@ class Widget extends Component {
         this.messageDelayTimeout = null;
         this.onGoingMessageDelay = false;
         this.customInputEnable = false;
-        this.attachImage = false;
-        this.attachLocation = false;
+        this.attachAny = false;
+        // this.attachLocation = false;
         this.sendMessage = this.sendMessage.bind(this);
         this.intervalId = null;
         this.eventListenerCleaner = () => {};
@@ -221,16 +221,16 @@ class Widget extends Component {
 
                 // var msg_hint = message.get('hint');
                 this.customInputEnable = false;
-                this.attachImage = false;
-                this.attachLocation = false;
+                this.attachAny = false;
+                // this.attachLocation = false;
                 if (isText(message)) {
                     console.log('+++++++ GS handleMessageReceived MSG text +++++++', str);
                     // all last text message should enable text input with no hint, except the TERMINATE_CHAT
                     if (!n) {
                         msg_hint = 'Type a message…';
                         this.customInputEnable = true;
-                        this.attachImage = false;
-                        this.attachLocation = false;
+                        this.attachAny = false;
+                        // this.attachLocation = false;
                         // dispatch(changeInputFieldHint('Type a message…'));
                         // dispatch(doInputEnabled());
                     }
@@ -249,12 +249,13 @@ class Widget extends Component {
                 } else if (isCollectInfoType1(message)) {
                     msg_hint = '';
                 } else if (isCaptureatttype(message)) {
-                    msg_hint = 'Select images...';
-                    this.attachImage = true;
-                } else if (isCaptureloctype(message)) {
-                    msg_hint = 'Select location...';
-                    this.attachLocation = true;
+                    msg_hint = 'Select file to attach...';
+                    this.attachAny = true;
                 }
+                //  else if (isCaptureloctype(message)) {
+                //     msg_hint = 'Select location...';
+                //     this.attachLocation = true;
+                // }
 
                 this.onGoingMessageDelay = true;
                 dispatch(triggerMessageDelayed(true));
@@ -263,8 +264,8 @@ class Widget extends Component {
                 this.onGoingMessageDelay = false;
                 msg_hint = 'Chat Ended...';
                 this.customInputEnable = false;
-                this.attachImage = false;
-                this.attachLocation = false;
+                this.attachAny = false;
+                // this.attachLocation = false;
                 this.newMessageTimeout(message, msg_hint);
             }
         } else {
@@ -330,8 +331,8 @@ class Widget extends Component {
                 dispatch(triggerMessageDelayed(true));
             } else {
                 this.customInputEnable = false;
-                this.attachImage = false;
-                this.attachLocation = false;
+                this.attachAny = false;
+                // this.attachLocation = false;
                 msg_hint = 'Chat Ended...';
             }
 
@@ -345,8 +346,8 @@ class Widget extends Component {
                         // dispatch(doInputEnabled());
                         msg_hint = 'Type a message…';
                         this.customInputEnable = true;
-                        this.attachImage = false;
-                        this.attachLocation = false;
+                        this.attachAny = false;
+                        // this.attachLocation = false;
                     }
                 } else if (
                     isFAQ(message) ||
@@ -356,25 +357,26 @@ class Widget extends Component {
                     // dispatch(changeInputFieldHint('Select an option...'));
                     msg_hint = 'Select an option...';
                     this.customInputEnable = false;
-                    this.attachImage = false;
-                    this.attachLocation = false;
+                    this.attachAny = false;
+                    // this.attachLocation = false;
                 } else if (isCollectInfoType1(message)) {
                     msg_hint = '';
                 } else if (isCaptureatttype(message)) {
-                    msg_hint = 'Select images...';
-                    this.attachImage = true;
-                } else if (isCaptureloctype(message)) {
-                    msg_hint = 'Select location...';
-                    this.attachLocation = true;
+                    msg_hint = 'Select file to attach...';
+                    this.attachAny = true;
                 }
+                // else if (isCaptureloctype(message)) {
+                //     msg_hint = 'Select location...';
+                //     this.attachLocation = true;
+                // }
             } else if (isText(message)) {
                 console.log('+++++++ GS popLastMessage Not Last MSG text +++++++', str);
                 // dispatch(changeInputFieldHint(''));
                 // dispatch(doInputDisabled());
                 msg_hint = '';
                 this.customInputEnable = false;
-                this.attachImage = false;
-                this.attachLocation = false;
+                this.attachAny = false;
+                // this.attachLocation = false;
             } else if (
                 isFAQ(message) ||
                 isQR(message || isCarouselType1(message) || isCarouselType2(message))
@@ -383,24 +385,23 @@ class Widget extends Component {
                 // dispatch(changeInputFieldHint('Select an option...'));
                 msg_hint = 'Select an option...';
                 this.customInputEnable = false;
-                this.attachImage = false;
-                this.attachLocation = false;
+                this.attachAny = false;
+                // this.attachLocation = false;
             } else if (isCollectInfoType1(message)) {
                 msg_hint = '';
                 this.customInputEnable = false;
-                this.attachImage = false;
-                this.attachLocation = false;
+                this.attachAny = false;
+                // this.attachLocation = false;
             } else if (isCaptureatttype(message)) {
-                msg_hint = 'Select images...';
+                msg_hint = 'Select file to attach...';
+                this.attachAny = true;
                 this.customInputEnable = false;
-                this.attachImage = true;
-                this.attachLocation = false;
-            } else if (isCaptureloctype(message)) {
-                msg_hint = 'Select location...';
-                this.customInputEnable = false;
-                this.attachImage = false;
-                this.attachLocation = true;
             }
+            // else if (isCaptureloctype(message)) {
+            //     msg_hint = 'Select location...';
+            //     this.customInputEnable = false;
+            //     this.attachLocation = true;
+            // }
             this.newMessageTimeout(message, msg_hint);
         }
     }
@@ -422,20 +423,20 @@ class Widget extends Component {
             } else {
                 dispatch(doInputDisabled());
             }
-            if (this.attachImage) {
+            if (this.attachAny) {
                 dispatch(doAttachEnabled());
-                dispatch(doAttachLocationDisabled());
-                dispatch(doInputDisabled());
-            } else {
-                dispatch(doAttachDisabled());
-            }
-            if (this.attachLocation) {
                 dispatch(doAttachLocationEnabled());
-                dispatch(doAttachDisabled());
                 dispatch(doInputDisabled());
             } else {
-                dispatch(doAttachLocationDisabled());
+                dispatch(doAttachDisabled());
             }
+            // if (this.attachLocation) {
+            //     dispatch(doAttachLocationEnabled());
+            //     dispatch(doAttachDisabled());
+            //     dispatch(doInputDisabled());
+            // } else {
+            //     dispatch(doAttachLocationDisabled());
+            // }
             this.popLastMessage();
         }, customMessageDelay(message.text || ''));
     }
@@ -843,12 +844,14 @@ class Widget extends Component {
         } else if (isCaptureatttype(messageClean)) {
             this.props.dispatch(addCaptureatttype(messageClean));
             this.props.dispatch(doInputDisabled());
-            this.props.dispatch(doAttachLocationDisabled());
-        } else if (isCaptureloctype(messageClean)) {
-            this.props.dispatch(addCaptureloctype(messageClean));
-            this.props.dispatch(doInputDisabled());
-            this.props.dispatch(doAttachDisabled());
-        } else if (isQR(messageClean)) {
+            this.props.dispatch(doAttachLocationEnabled());
+        }
+        // else if (isCaptureloctype(messageClean)) {
+        //     this.props.dispatch(addCaptureloctype(messageClean));
+        //     this.props.dispatch(doInputDisabled());
+        //     this.props.dispatch(doAttachDisabled());
+        // }
+        else if (isQR(messageClean)) {
             this.props.dispatch(addQuickReply(messageClean));
             this.props.dispatch(doInputDisabled());
             this.props.dispatch(doAttachDisabled());

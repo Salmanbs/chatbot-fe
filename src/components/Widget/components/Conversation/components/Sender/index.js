@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import { connect } from 'react-redux';
 import Style from 'style-it';
 import $ from 'jquery';
@@ -17,7 +17,8 @@ import {
   doAttachLocationDisabled,
   doInputEnabled,
   emitUserMessage,
-  addUserMessage
+  addUserMessage,
+  addImageSnippetUser
 } from 'actions';
 
 import './style.scss';
@@ -103,15 +104,23 @@ class Sender extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    if (!this.props.disabledAttach) {
+    // assume some file is uploaded by user, lets process only attach file and ignore typed text
+    if (this.state.pictures.length > 0) {    
+    //if (!this.props.disabledAttach) {
+
+      console.log('+++++++ handleSubmit Upload attachment +++++++', this.props.customData.bot_id);
       const fd = new FormData();
       const files = this.state.pictures[0];
+      console.log('+++++++ handleSubmit Upload attachment +++++++', files.name);
+
       fd.append('files[]', files, files.name);
-      fd.append('label', 'WEBUPLOAD');
-      fd.append('bot_id', 'eEw0U2F5emZ2ZkdHZjJ1RkFxd004Zz09');
+      // fd.append('label', 'WEBUPLOAD');
+      fd.append('bot_id', this.props.customData.bot_id);
       fd.append('session_id', '3745637');
+      fd.append('type', 'file');
       $.ajax({
-        url: 'https://www.workchallenger.com/tosall_client2/api/capture_attachment',
+        // url: 'https://www.workchallenger.com/tosall_client2/api/capture_attachment',
+        url: 'https://www.workchallenger.com/tosall_client/api/capture_attachment_file_location',
         type: 'POST',
         data: fd,
         processData: false,
@@ -123,19 +132,56 @@ class Sender extends React.Component {
         }
 
       }).done((result) => {
-        if (result.status == 'success') {
-          console.log('Success');
+        const response = JSON.parse(result);
+        console.log('+++++++ handleSubmit Upload attachment 111 +++++++', this.props.customData.bot_id);
+        console.log('+++++++ handleSubmit Upload attachment 111 +++++++', response);
+
+        if (response['status'] == 'success') {
+          console.log(response['msg']);
+          console.log('+++++++ handleSubmit Upload attachment Success +++++++', response['link'][0]);
+
+          console.log('+++++++ handleSubmit Upload attachment 222 +++++++');
+          const imgurl = response['link'][0]
+          const resp = { attachment: {type:'image', payload: {src:imgurl,title:""}}};
+          const element = resp.attachment.payload;
+          console.log('+++++++ handleSubmit Upload attachment 7771 +++++++', resp);
+          console.log('+++++++ handleSubmit Upload attachment 7772 +++++++', element);
+          console.log('+++++++ handleSubmit Upload attachment 7773 +++++++', element.src);
+          // this.props.chooseReply({ title: 'Image uploaded', payload: files });
+
+          this.props.chooseReply2({title:'', image:imgurl});
+          this.props.changeInputFieldHint('Type a message…');
+          
+          // this.props.doInputDisabled();
+          // this.props.doAttachDisabled();
+          // this.props.doAttachLocationDisabled();
+          // this.props.changeInputFieldHint('');
+
         }
       }).fail(() => {
         console.log('Failed!');
-      });
-      this.props.chooseReply({ title: 'Image uploaded', payload: files });
+        console.log('+++++++ handleSubmit Upload attachment Failed +++++++');
 
-      this.props.doInputDisabled();
-      this.props.doAttachDisabled();
-      this.props.doAttachLocationDisabled();
-      this.props.changeInputFieldHint('');
-    } else if (!this.props.disabledAttachLocation) {
+      });
+
+      // console.log('+++++++ handleSubmit Upload attachment 222 +++++++');
+      // // this.props.chooseReply({ title: 'Image uploaded', payload: files });
+
+      // resp = { attachment: {type:'image', payload: {src:str(response['link'][0]),title:""}}};
+      // const element = resp.attachment.payload;
+      // this.props.dispatch(
+      //     addImageSnippet({
+      //         title: element.title,
+      //         image: element.src,
+      //     })
+      // );
+      
+      // this.props.doInputDisabled();
+      // this.props.doAttachDisabled();
+      // this.props.doAttachLocationDisabled();
+      // this.props.changeInputFieldHint('');
+    } else if (this.state.position.lng && this.state.position.lat) {
+    //else if (!this.props.disabledAttachLocation) {
       this.props.chooseReply({ title: 'Location uploaded', payload: this.state.position });
       this.props.doInputDisabled();
       this.props.doAttachDisabled();
@@ -227,7 +273,8 @@ class Sender extends React.Component {
       textFontFamily,
       inputCaretColor,
       chatFontSize,
-      isTextAreaBoxShadowEnabled
+      isTextAreaBoxShadowEnabled,
+      customData
     } = this.props;
 
     const boxShadowStyle = isTextAreaBoxShadowEnabled ? 'inset 0 0px 8px 0px #b5b5b5' : 'none';
@@ -363,7 +410,28 @@ const mapDispatchToProps = dispatch => ({
   chooseReply: ({ title, payload }) => {
     dispatch(addUserMessage(title));
     dispatch(emitUserMessage(title));
+  },
+
+  chooseReply2: ({title,image}) => {
+    // console.log('+++++++ chooseReply2 Upload attachment 7771 +++++++', resp);
+    // const element = resp;
+    // console.log('+++++++ chooseReply2 Upload attachment 7771 +++++++', element);
+    dispatch(
+        addImageSnippetUser({
+            title: title,
+            image: image,
+        })
+    );
+
+    //const resp = { attachment: {type:'image', payload: {src:image,title:""}}};
+    
+    const attachreply = '$$attachreply$$'+image
+    console.log('+++++++ chooseReply2 Upload attachment 7771 +++++++', attachreply);
+    dispatch(emitUserMessage(attachreply));
+    // dispatch(addUserMessage(title));
+    // dispatch(emitUserMessage(title));
   }
+
 });
 
 Sender.propTypes = {
@@ -372,7 +440,10 @@ Sender.propTypes = {
   disabledInput: PropTypes.bool,
   disabledAttach: PropTypes.bool,
   disabledAttachLocation: PropTypes.bool,
-  userInput: PropTypes.string
+  userInput: PropTypes.string,
+  customData: PropTypes.shape({}),
+  chooseReply: PropTypes.func.isRequired,
+  chooseReply2: PropTypes.func.isRequired
 };
 
 Sender.defaultProps = {
@@ -399,7 +470,8 @@ Sender.defaultProps = {
   errorStyle: {},
   singleImage: false,
   onChange: () => {},
-  defaultImages: []
+  defaultImages: [],
+  customData: {}
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sender);

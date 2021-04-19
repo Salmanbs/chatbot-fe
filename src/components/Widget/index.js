@@ -127,14 +127,30 @@ class Widget extends Component {
     }
 
     componentDidUpdate() {
-        const { isChatOpen, dispatch, embedded, initialized } = this.props;
+        const { isChatOpen, dispatch, embedded, initialized, liveChat } = this.props;
         if (isChatOpen) {
             if (!initialized) {
                 this.initializeWidget();
-                this.props.dispatch(doInputDisabled());
-                this.props.dispatch(doAttachDisabled());
-                this.props.dispatch(doAttachLocationDisabled());
-                this.props.dispatch(changeInputFieldHint(''));
+                // this.props.dispatch(doInputDisabled());
+                console.log(' GURTAJ  initPayload',liveChat);
+
+                if (!this.props.liveChat){
+                    // disable attachment button from GUI
+                    // this.props.dispatch(doInputDisabled());
+                    this.props.dispatch(doAttachDisabled());
+                    this.props.dispatch(doAttachLocationDisabled());
+                    // this.props.dispatch(changeInputFieldHint(''));
+                } else {
+                    this.props.dispatch(doInputEnabled());
+                    this.props.dispatch(doAttachEnabled());
+                    this.props.dispatch(doAttachLocationEnabled());
+                    this.props.dispatch(changeInputFieldHint('Type a message…'));
+                }
+
+                // this.props.dispatch(doAttachDisabled());
+                // this.props.dispatch(doAttachLocationDisabled());
+
+                
             }
 
             this.trySendInitPayload();
@@ -145,9 +161,21 @@ class Widget extends Component {
                     if (msgToInit) {
                         this.props.dispatch(emitUserMessage(msgToInit));
                         this.props.dispatch(changeInputFieldHint(''));
-                        this.props.dispatch(doInputDisabled());
-                        this.props.dispatch(doAttachDisabled());
-                        this.props.dispatch(doAttachLocationDisabled());
+                        // this.props.dispatch(doInputDisabled());
+                        if (!this.props.liveChat){
+                            // disable attachment button from GUI
+                            this.props.dispatch(doInputDisabled());
+                            this.props.dispatch(doAttachDisabled());
+                            this.props.dispatch(doAttachLocationDisabled());
+                        } else {
+                            this.props.dispatch(doInputEnabled());
+                            this.props.dispatch(doAttachEnabled());
+                            this.props.dispatch(doAttachLocationEnabled());
+                            this.props.dispatch(changeInputFieldHint('Type a message…'));
+                        }
+
+                        // this.props.dispatch(doAttachDisabled());
+                        // this.props.dispatch(doAttachLocationDisabled());
                     }
                 }
             }, 2000);
@@ -197,13 +225,27 @@ class Widget extends Component {
     }
 
     handleMessageReceived(messageWithMetadata) {
-        const { dispatch, isChatOpen, disableTooltips, socket } = this.props;
+        const { dispatch, isChatOpen, disableTooltips, socket, liveChat } = this.props;
         // we extract metadata so we are sure it does not interfer with type checking of the message
         const { metadata, ...message } = messageWithMetadata;
-        dispatch(changeInputFieldHint(''));
-        dispatch(doInputDisabled());
-        dispatch(doAttachDisabled());
-        dispatch(doAttachLocationDisabled());
+        // dispatch(changeInputFieldHint(''));
+        // dispatch(doInputDisabled());
+        console.log('+++++++ GS handleMessageReceived this.props.liveChat +++++++', this.props.liveChat);
+        if (!this.props.liveChat){
+            // disable attachment button from GUI
+            dispatch(changeInputFieldHint(''));
+            dispatch(doInputDisabled());
+            dispatch(doAttachDisabled());
+            dispatch(doAttachLocationDisabled());
+        } else {
+            dispatch(doInputEnabled());
+            dispatch(doAttachEnabled());
+            dispatch(doAttachLocationEnabled());
+            dispatch(changeInputFieldHint('Type a message…'));
+        }
+
+        // this.props.dispatch(doAttachDisabled());
+        // this.props.dispatch(doAttachLocationDisabled());
         const str = message.text;
         const n = str.includes('TERMINATE_CHAT');
         if (!isChatOpen) {
@@ -229,7 +271,7 @@ class Widget extends Component {
                     if (!n) {
                         msg_hint = 'Type a message…';
                         this.customInputEnable = true;
-                        this.attachAny = false;
+                        this.attachAny = true;
                         // this.attachLocation = false;
                         // dispatch(changeInputFieldHint('Type a message…'));
                         // dispatch(doInputEnabled());
@@ -269,11 +311,25 @@ class Widget extends Component {
                 this.newMessageTimeout(message, msg_hint);
             }
         } else {
+            console.log('+++++++ handleMessageReceived messages push +++++++');            
             this.messages.push(message);
-            dispatch(changeInputFieldHint(''));
-            dispatch(doInputDisabled());
-            dispatch(doAttachDisabled());
-            dispatch(doAttachLocationDisabled());
+
+
+            if (!this.props.liveChat){
+                // disable attachment button from GUI
+                dispatch(changeInputFieldHint(''));
+                dispatch(doInputDisabled());                
+                dispatch(doAttachDisabled());
+                dispatch(doAttachLocationDisabled());
+            } else {
+                dispatch(doInputEnabled());
+                dispatch(doAttachEnabled());
+                dispatch(doAttachLocationEnabled());
+                dispatch(changeInputFieldHint('Type a message…'));
+            }
+
+            // this.props.dispatch(doAttachDisabled());
+            // this.props.dispatch(doAttachLocationDisabled());
         }
 
         if (this.msgTimeout) {
@@ -299,9 +355,23 @@ class Widget extends Component {
                 }, this.props.timeout * 1000);
             }
         } else {
-            dispatch(doInputDisabled());
-            dispatch(doAttachDisabled());
-            dispatch(doAttachLocationDisabled());
+            // dispatch(doInputDisabled());
+
+            if (!this.props.liveChat){
+                dispatch(changeInputFieldHint(''));
+                dispatch(doInputDisabled());                
+                // disable attachment button from GUI
+                dispatch(doAttachDisabled());
+                dispatch(doAttachLocationDisabled());
+            } else {
+                dispatch(changeInputFieldHint('Type a message…'));
+                dispatch(doInputEnabled());                
+                dispatch(doAttachEnabled());
+                dispatch(doAttachLocationEnabled());
+            }
+
+            // this.props.dispatch(doAttachDisabled());
+            // this.props.dispatch(doAttachLocationDisabled());
             if (socket) {
                 socket.close();
             }
@@ -346,7 +416,7 @@ class Widget extends Component {
                         // dispatch(doInputEnabled());
                         msg_hint = 'Type a message…';
                         this.customInputEnable = true;
-                        this.attachAny = false;
+                        this.attachAny = true;
                         // this.attachLocation = false;
                     }
                 } else if (
@@ -416,6 +486,22 @@ class Widget extends Component {
             dispatch(triggerMessageDelayed(false));
             this.onGoingMessageDelay = false;
             dispatch(changeInputFieldHint(msg_hint));
+
+            console.log('+++++++ GS newMessageTimeout +++++++',this.props.liveChat );            
+            if (!this.props.liveChat){
+                // disable attachment button from GUI
+                this.props.dispatch(doInputDisabled());
+                this.props.dispatch(doAttachDisabled());
+                this.props.dispatch(doAttachLocationDisabled());
+            } else {
+                this.props.dispatch(doInputEnabled());
+                this.props.dispatch(doAttachEnabled());
+                this.props.dispatch(doAttachLocationEnabled());
+                this.props.dispatch(changeInputFieldHint('Type a message…'));
+                this.customInputEnable = true
+                this.attachAny = true
+            }
+            
             if (this.customInputEnable) {
                 dispatch(doInputEnabled());
                 dispatch(doAttachDisabled());
@@ -426,10 +512,11 @@ class Widget extends Component {
             if (this.attachAny) {
                 dispatch(doAttachEnabled());
                 dispatch(doAttachLocationEnabled());
-                dispatch(doInputDisabled());
+                dispatch(doInputEnabled());
             } else {
                 dispatch(doAttachDisabled());
             }
+
             // if (this.attachLocation) {
             //     dispatch(doAttachLocationEnabled());
             //     dispatch(doAttachDisabled());
@@ -666,10 +753,24 @@ class Widget extends Component {
                     dispatch(pullSession());
                     if (sendInitPayload) {
                         console.log(' GURTAJ Sending Initial Payload initPayload');
-                        dispatch(changeInputFieldHint(''));
-                        dispatch(doInputDisabled());
-                        dispatch(doAttachDisabled());
-                        dispatch(doAttachLocationDisabled());
+                        // dispatch(changeInputFieldHint(''));
+                        // dispatch(doInputDisabled());
+
+                        if (!this.props.liveChat){
+                            // disable attachment button from GUI
+                            dispatch(doAttachDisabled());
+                            dispatch(doAttachLocationDisabled());
+                            dispatch(doInputDisabled());
+                            dispatch(changeInputFieldHint(''));
+                        } else {
+                            dispatch(doInputEnabled());
+                            dispatch(changeInputFieldHint('Type a message...'));
+                            dispatch(doAttachEnabled());
+                            dispatch(doAttachLocationEnabled());
+                        }
+
+                        // this.props.dispatch(doAttachDisabled());
+                        // this.props.dispatch(doAttachLocationDisabled());
                         this.trySendInitPayload();
                     }
                 } else {
@@ -815,6 +916,18 @@ class Widget extends Component {
         console.log('+++++++ GS dispatchMessage222 +++++++', messageClean.text);
         console.log('+++++++ GS dispatchMessage333 +++++++', Object.keys(messageClean));
 
+        if (!this.props.liveChat){
+            // disable attachment button from GUI
+            // this.props.dispatch(doInputDisabled());
+            this.props.dispatch(doAttachDisabled());
+            this.props.dispatch(doAttachLocationDisabled());
+        } else {
+            this.props.dispatch(doInputEnabled());
+            this.props.dispatch(doAttachEnabled());
+            this.props.dispatch(doAttachLocationEnabled());
+            this.props.dispatch(changeInputFieldHint('Type a message…'));
+        }
+
         if (isText(messageClean)) {
             const str = messageClean.text;
             const n = str.includes('TERMINATE_CHAT');
@@ -891,9 +1004,22 @@ class Widget extends Component {
             ' ++++++++++++++++  Widget handleMessageSubmit ---> User typed somethings',
             event.target.message.value
         );
-        this.props.dispatch(doInputDisabled());
+
+        if (!this.props.liveChat){
+            // disable attachment button from GUI
+            this.props.dispatch(doInputDisabled());
+            this.props.dispatch(doAttachDisabled());
+            this.props.dispatch(doAttachLocationDisabled());
+        } else {
+            this.props.dispatch(doInputEnabled());
+            this.props.dispatch(doAttachEnabled());
+            this.props.dispatch(doAttachLocationEnabled());
+            this.props.dispatch(changeInputFieldHint('Type a message…'));
+        }
+
+        // this.props.dispatch(doInputDisabled());
         // this.props.dispatch(doAttachDisabled());
-        this.props.dispatch(changeInputFieldHint(''));
+        //this.props.dispatch(changeInputFieldHint(''));
         event.preventDefault();
         const userUttered = event.target.message.value;
         if (userUttered) {

@@ -225,6 +225,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
           contactInfoHeaderFontColor: configData.contactInfoHeaderFontColor
         }}
         customData={props.customData}
+        liveChat={props.liveChat}
         downloadOptions={{
           show: configData.displayImageDownloadIcon,
           backgroundColor: `#${configData.displayImageDownloadIconBgColor}`,
@@ -353,6 +354,7 @@ ConnectedWidget.propTypes = {
   openLauncherImage: PropTypes.string,
   closeImage: PropTypes.string,
   docViewer: PropTypes.bool,
+  liveChat: PropTypes.bool,
   customComponent: PropTypes.func,
   displayUnreadCount: PropTypes.bool,
   showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
@@ -385,6 +387,7 @@ ConnectedWidget.defaultProps = {
   protocolOptions: {},
   badge: 0,
   embedded: false,
+  liveChat: false,
   params: {
     storage: 'session',
     images: {

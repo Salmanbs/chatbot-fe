@@ -159,6 +159,14 @@ export function addImageSnippet(image) {
   };
 }
 
+export function addImageSnippetUser(image) {
+  return {
+    type: actions.ADD_NEW_USER_IMAGE_IMGREPLY,
+    image
+  };
+}
+
+
 export function addQuickReply(quickReply) {
   return {
     type: actions.ADD_QUICK_REPLY,

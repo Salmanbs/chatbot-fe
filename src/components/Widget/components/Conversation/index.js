@@ -115,6 +115,7 @@ const Conversation = props =>
         textFontFamily={props.textFontFamily}
         inputCaretColor={props.inputCaretColor}
         chatFontSize={props.chatFontSize}
+        customData={props.customData}
       />
       {props.isFooterEnabled &&
       <Footer

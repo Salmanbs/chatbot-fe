@@ -8,6 +8,7 @@ const plugin = {
       <Widget
         baseUrl={args.baseUrl}
         customData={args.customData}
+        liveChat = {args.liveChat}
       />, document.querySelector('#tosall-chatbot')
     );
   }

@@ -103,6 +103,7 @@ const WidgetLayout = (props) => {
           contactInfoStyle={props.contactInfoStyle}
           isTextAreaBoxShadowEnabled={props.isTextAreaBoxShadowEnabled}
           downloadOptions={props.downloadOptions}
+          customData={props.customData}
         />
       )}
       {!props.embedded && (

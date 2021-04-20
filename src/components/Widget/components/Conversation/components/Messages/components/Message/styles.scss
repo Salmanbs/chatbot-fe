@@ -3,7 +3,7 @@
 @import "common.scss";
 
 .#{$namespace}conversation-container {
-  
+
   .#{$namespace}message {
     margin: 10px 10px 10px 4px;
     font-size: 16px;
@@ -11,14 +11,14 @@
     display: flex;
     font-family: $fontfamily;
     position: relative;
-  
+
     .#{$namespace}markdown {
       p {
         margin: 0;
       }
     }
   }
-  
+
   .#{$namespace}client {
     @include message-bubble($tosall-theme-color, $white);
     max-width: 85%;
@@ -28,13 +28,13 @@
       color: $turqois-1;
     }
   }
-  
+
   .#{$namespace}response {
     @include message-bubble($grey-2, #000, 0 15px 15px 15px);
     overflow-wrap: break-word;
     box-sizing: content-box;
   }
-  
+
   .#{$namespace}message-text {
     margin: 0;
 
@@ -46,7 +46,7 @@
     p{
       margin: 0;
     }
-    
+
     ol:first-child, ul:first-child {
       margin: 0;
       padding: 0 0 0 15px;

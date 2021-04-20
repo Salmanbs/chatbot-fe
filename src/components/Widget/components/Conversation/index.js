@@ -14,7 +14,7 @@ const Conversation = props =>
       .rw-conversation-container {
         width: ${props.botWindowWidth};
       }
-      
+
       @media screen and (min-width: 801px) {
         .rw-conversation-container {
           height: ${props.botWindowHeight};

@@ -47,7 +47,7 @@ export default function (storage) {
         console.log('+++++++ createImageSnippet ADD_NEW_USER_IMAGE_IMGREPLY +++++++');
 
         return storeMessage(state.push(createImageSnippet(action.image, MESSAGE_SENDER.CLIENT)));
-      }      
+      }
       case actionTypes.ADD_QUICK_REPLY: {
         return storeMessage(state.push(createQuickReply(action.quickReply, MESSAGE_SENDER.RESPONSE)));
       }

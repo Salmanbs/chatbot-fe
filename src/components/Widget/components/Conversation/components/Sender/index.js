@@ -105,7 +105,7 @@ class Sender extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     // assume some file is uploaded by user, lets process only attach file and ignore typed text
-    if (this.state.pictures.length > 0) {    
+    if (this.state.pictures.length > 0) {
     //if (!this.props.disabledAttach) {
 
       console.log('+++++++ handleSubmit Upload attachment +++++++', this.props.customData.bot_id);
@@ -151,7 +151,7 @@ class Sender extends React.Component {
 
           this.props.chooseReply2({title:'', image:imgurl});
           this.props.changeInputFieldHint('Type a message…');
-          
+
           // this.props.doInputDisabled();
           // this.props.doAttachDisabled();
           // this.props.doAttachLocationDisabled();
@@ -175,7 +175,7 @@ class Sender extends React.Component {
       //         image: element.src,
       //     })
       // );
-      
+
       // this.props.doInputDisabled();
       // this.props.doAttachDisabled();
       // this.props.doAttachLocationDisabled();
@@ -424,7 +424,7 @@ const mapDispatchToProps = dispatch => ({
     );
 
     //const resp = { attachment: {type:'image', payload: {src:image,title:""}}};
-    
+
     const attachreply = '$$attachreply$$'+image
     console.log('+++++++ chooseReply2 Upload attachment 7771 +++++++', attachreply);
     dispatch(emitUserMessage(attachreply));

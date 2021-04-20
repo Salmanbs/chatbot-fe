@@ -150,7 +150,7 @@ class Widget extends Component {
                 // this.props.dispatch(doAttachDisabled());
                 // this.props.dispatch(doAttachLocationDisabled());
 
-                
+
             }
 
             this.trySendInitPayload();
@@ -311,14 +311,14 @@ class Widget extends Component {
                 this.newMessageTimeout(message, msg_hint);
             }
         } else {
-            console.log('+++++++ handleMessageReceived messages push +++++++');            
+            console.log('+++++++ handleMessageReceived messages push +++++++');
             this.messages.push(message);
 
 
             if (!this.props.liveChat){
                 // disable attachment button from GUI
                 dispatch(changeInputFieldHint(''));
-                dispatch(doInputDisabled());                
+                dispatch(doInputDisabled());
                 dispatch(doAttachDisabled());
                 dispatch(doAttachLocationDisabled());
             } else {
@@ -359,13 +359,13 @@ class Widget extends Component {
 
             if (!this.props.liveChat){
                 dispatch(changeInputFieldHint(''));
-                dispatch(doInputDisabled());                
+                dispatch(doInputDisabled());
                 // disable attachment button from GUI
                 dispatch(doAttachDisabled());
                 dispatch(doAttachLocationDisabled());
             } else {
                 dispatch(changeInputFieldHint('Type a message…'));
-                dispatch(doInputEnabled());                
+                dispatch(doInputEnabled());
                 dispatch(doAttachEnabled());
                 dispatch(doAttachLocationEnabled());
             }
@@ -487,7 +487,7 @@ class Widget extends Component {
             this.onGoingMessageDelay = false;
             dispatch(changeInputFieldHint(msg_hint));
 
-            console.log('+++++++ GS newMessageTimeout +++++++',this.props.liveChat );            
+            console.log('+++++++ GS newMessageTimeout +++++++',this.props.liveChat );
             if (!this.props.liveChat){
                 // disable attachment button from GUI
                 this.props.dispatch(doInputDisabled());
@@ -501,7 +501,7 @@ class Widget extends Component {
                 this.customInputEnable = true
                 this.attachAny = true
             }
-            
+
             if (this.customInputEnable) {
                 dispatch(doInputEnabled());
                 dispatch(doAttachDisabled());

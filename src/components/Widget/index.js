@@ -271,7 +271,9 @@ class Widget extends Component {
                     if (!n) {
                         msg_hint = 'Type a message…';
                         this.customInputEnable = true;
-                        this.attachAny = true;
+                        if (this.props.liveChat){
+                            this.attachAny = true;
+                        }
                         // this.attachLocation = false;
                         // dispatch(changeInputFieldHint('Type a message…'));
                         // dispatch(doInputEnabled());
@@ -395,7 +397,7 @@ class Widget extends Component {
             let msg_hint = '';
             // message.get('hint');
             // var msg_hint = '';
-
+            this.attachAny = false;
             if (!n) {
                 this.onGoingMessageDelay = true;
                 dispatch(triggerMessageDelayed(true));
@@ -408,6 +410,7 @@ class Widget extends Component {
 
             if (!this.messages.length) {
                 console.log('+++++++ GS popLastMessage Last MSG +++++++', str);
+                this.attachAny = false;
                 if (isText(message)) {
                     console.log('+++++++ GS popLastMessage Last MSG text +++++++', str);
                     // all last text message should enable text input with no hint, except the TERMINATE_CHAT
@@ -416,7 +419,9 @@ class Widget extends Component {
                         // dispatch(doInputEnabled());
                         msg_hint = 'Type a message…';
                         this.customInputEnable = true;
-                        this.attachAny = true;
+                        if (this.props.liveChat){
+                            this.attachAny = true;
+                        }
                         // this.attachLocation = false;
                     }
                 } else if (
@@ -487,7 +492,7 @@ class Widget extends Component {
             this.onGoingMessageDelay = false;
             dispatch(changeInputFieldHint(msg_hint));
 
-            console.log('+++++++ GS newMessageTimeout +++++++',this.props.liveChat );
+            console.log(this.attachAny ,' +++++++ GS newMessageTimeout +++++++',this.props.liveChat );
             if (!this.props.liveChat){
                 // disable attachment button from GUI
                 this.props.dispatch(doInputDisabled());
@@ -502,6 +507,7 @@ class Widget extends Component {
                 this.attachAny = true
             }
 
+            console.log(this.customInputEnable ,' +++++++ CustomInputEnable  and attachAny +++++++',this.attachAny );
             if (this.customInputEnable) {
                 dispatch(doInputEnabled());
                 dispatch(doAttachDisabled());

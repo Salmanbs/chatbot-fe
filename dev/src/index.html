@@ -4,12 +4,13 @@
         <title>Botfront - Web Chat</title>
         <script>
             const load = () => {
-                if (!WebChat) setTimeout(load, 100);
+                if (!bChat) setTimeout(load, 100);
                 /*if (WebChat) bChat.default({
           customData:{language:"en"},
           socketUrl:"http://localhost:5005",
           withRules: true,
         });*/
+        console.log(bChat)
                 const data = {
                     title: 'VIRTUAL ASSISTANT',
                     subtitle: 'Test',
@@ -163,7 +164,12 @@
                 };
 
                 const chatHeaderData = () => {
-                    return WebChat.default.init({
+                    return bChat.default.init({
+                        customData: { bot_id: 'RTY0UHBzdFhBd3NEOWRZSjVzaE00dz09' }, // api data NnpaWmd4U1hodG0wRkVUNmlqZ1dxQT09, RTY0UHBzdFhBd3NEOWRZSjVzaE00dz09 , c25tRE1VK0RKdkU4UEQ4MWVNSWd3Zz09
+                        baseUrl: 'https://workchallenger.com/tosall_client1',
+                        liveChat: true
+                    });
+                    return bChat.default.init({
                         selector: '#tosall-chatbot',
                         initPayload: '/greet_as_bill_assistant',
                         embedded: false,
@@ -357,14 +363,14 @@
 
                 chatHeaderData();
             };
-            setTimeout(load, 200);
+            setTimeout(load, 500);
         </script>
     </head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <body style="background: lightcyan;">
-        <a href="#" onclick="WebChat.send('/chitchat.greet')">Send chitchat.greet without text</a>
+        <a href="#" onclick="bChat.send('/chitchat.greet')">Send chitchat.greet without text</a>
         <br />
-        <a href="#" onclick="WebChat.send('/chitchat.greet', 'salut')"
+        <a href="#" onclick="bChat.send('/chitchat.greet', 'salut')"
             >Send chitchat.greet with text</a
         >
         <span style="height: 400px; display: block;">test</span>
@@ -373,7 +379,7 @@
         <h1 class="test">test</h1>
         <button class="my-button">MY BUTTON</button>
         <script src="index.js" type="text/javascript"></script>
-        <script src="config.file.main.js" type="text/javascript"></script>
+        <!--<script src="config.file.main.js" type="text/javascript"></script>-->
         <div style="width: 400px; height: 2000px; border: 3px solid lightsalmon;" id="webchat" />
         <script>
             /*WebChat.default.init({
@@ -418,6 +424,6 @@
     }
   })*/
         </script>
-        <div id="tosall-chatbot" />
+        <div id="tosall-chatbot"></div>
     </body>
 </html>

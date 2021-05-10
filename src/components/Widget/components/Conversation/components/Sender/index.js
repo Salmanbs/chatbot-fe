@@ -29,6 +29,24 @@ const styles = {
   overflowY: 'hidden'
 };
 
+const progress = (e) => {
+
+  if(e.lengthComputable){
+      var max = e.total;
+      var current = e.loaded;
+
+      var Percentage = (current * 100)/max;
+      console.log(Percentage);
+
+
+      if(Percentage >= 100)
+      {
+         // process completed  
+      }
+  }  
+}
+
+
 class Sender extends React.Component {
   constructor(props) {
     super(props);
@@ -41,7 +59,8 @@ class Sender extends React.Component {
         lat: 0,
         lng: 0
       },
-      isLocationOpen: false
+      isLocationOpen: false,
+      loader: false
     };
 
     this.inputElement = '';
@@ -105,7 +124,7 @@ class Sender extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     // assume some file is uploaded by user, lets process only attach file and ignore typed text
-    if (this.state.pictures.length > 0) {
+    if (this.state.pictures.length > 0) {    
     //if (!this.props.disabledAttach) {
 
       console.log('+++++++ handleSubmit Upload attachment +++++++', this.props.customData.bot_id);
@@ -118,6 +137,9 @@ class Sender extends React.Component {
       fd.append('bot_id', this.props.customData.bot_id);
       fd.append('session_id', '3745637');
       fd.append('type', 'file');
+      this.setState({
+        loader: true
+      });
       $.ajax({
         // url: 'https://www.workchallenger.com/tosall_client2/api/capture_attachment',
         url: 'https://www.workchallenger.com/tosall_client/api/capture_attachment_file_location',
@@ -129,7 +151,14 @@ class Sender extends React.Component {
         headers: {
           Authorization: 'Bearer Kailashchandra353',
           token: 'Kailashchandra353'
-        }
+        },
+        xhr: function() {
+            var myXhr = $.ajaxSettings.xhr();
+            if(myXhr.upload){
+                myXhr.upload.addEventListener('progress',progress, false);
+            }
+            return myXhr;
+      },
 
       }).done((result) => {
         const response = JSON.parse(result);
@@ -151,17 +180,22 @@ class Sender extends React.Component {
 
           this.props.chooseReply2({title:'', image:imgurl});
           this.props.changeInputFieldHint('Type a message…');
-
+          
           // this.props.doInputDisabled();
           // this.props.doAttachDisabled();
           // this.props.doAttachLocationDisabled();
           // this.props.changeInputFieldHint('');
 
         }
+        this.setState({
+          loader: false
+        });
       }).fail(() => {
         console.log('Failed!');
         console.log('+++++++ handleSubmit Upload attachment Failed +++++++');
-
+        this.setState({
+          loader: false
+        });
       });
 
       // console.log('+++++++ handleSubmit Upload attachment 222 +++++++');
@@ -175,7 +209,7 @@ class Sender extends React.Component {
       //         image: element.src,
       //     })
       // );
-
+      
       // this.props.doInputDisabled();
       // this.props.doAttachDisabled();
       // this.props.doAttachLocationDisabled();
@@ -202,6 +236,7 @@ class Sender extends React.Component {
       },
       isLocationOpen: false
     });
+    
   }
 
   removeImage(picture) {
@@ -221,6 +256,95 @@ class Sender extends React.Component {
           {this.renderPreviewPictures()}
         </FlipMove>
       </div>
+    );
+  }
+
+  renderLoader() {
+    return (
+      <Style>
+            {`
+            .rw-spinner {
+              height: 30%;
+              background-color: #eeeeee;
+              -moz-user-select: none;
+              -webkit-user-select: none;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+              .spinner-container {
+                animation: rotate 2s linear infinite;
+                -webkit-animation: rotate 2s linear infinite;
+              }
+              
+              .spinner-container .path {
+                stroke-dasharray: 1, 150;
+                /* 1%, 101% circumference */
+                stroke-dashoffset: 0;
+                stroke: rgba(27, 154, 89, 0.7);
+                stroke-linecap: round;
+                animation: dash 1.5s ease-in-out infinite;
+                -webkit-animation: dash 1.5s ease-in-out infinite;
+              }
+              
+              @keyframes rotate {
+                100% {
+                  transform: rotate(360deg);
+                }
+              }
+              
+              @keyframes dash {
+                0% {
+                  stroke-dasharray: 1, 150;
+                  /* 1%, 101% circumference */
+                  stroke-dashoffset: 0;
+                }
+                50% {
+                  stroke-dasharray: 90, 150;
+                  /* 70%, 101% circumference */
+                  stroke-dashoffset: -35;
+                  /* 25% circumference */
+                }
+                100% {
+                  stroke-dasharray: 90, 150;
+                  /* 70%, 101% circumference */
+                  stroke-dashoffset: -124;
+                  /* -99% circumference */
+                }
+              }
+              
+              @-webkit-keyframes rotate {
+                100% {
+                  transform: rotate(360deg);
+                }
+              }
+              
+              @-webkit-keyframes dash {
+                0% {
+                  stroke-dasharray: 1, 150;
+                  /* 1%, 101% circumference */
+                  stroke-dashoffset: 0;
+                }
+                50% {
+                  stroke-dasharray: 90, 150;
+                  /* 70%, 101% circumference */
+                  stroke-dashoffset: -35;
+                  /* 25% circumference */
+                }
+                100% {
+                  stroke-dasharray: 90, 150;
+                  /* 70%, 101% circumference */
+                  stroke-dashoffset: -124;
+                  /* -99% circumference */
+                }
+              }
+            `}
+        <div className="rw-spinner">
+            <svg class="spinner-container" width="65px" height="65px" viewBox="0 0 52 52">
+              <circle class="path" cx="26px" cy="26px" r="20px" fill="none" stroke-width="4px" />
+            </svg>
+        </div>
+      </Style>
     );
   }
 
@@ -322,6 +446,7 @@ class Sender extends React.Component {
           </Style>
           }
           { this.state.pictures.length > 0 ? this.renderPreview() : null }
+          { this.state.loader ? this.renderLoader() : null }
           {!disabledAttachLocation && this.state.isLocationOpen && <LocationPickerEx
             address={this.state.address}
             position={this.state.position}
@@ -424,7 +549,7 @@ const mapDispatchToProps = dispatch => ({
     );
 
     //const resp = { attachment: {type:'image', payload: {src:image,title:""}}};
-
+    
     const attachreply = '$$attachreply$$'+image
     console.log('+++++++ chooseReply2 Upload attachment 7771 +++++++', attachreply);
     dispatch(emitUserMessage(attachreply));

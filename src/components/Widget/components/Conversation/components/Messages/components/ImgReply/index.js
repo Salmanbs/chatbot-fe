@@ -91,6 +91,7 @@ class ImgReply extends PureComponent {
         if (customCss && customCss.style === "class") {
             customCss.css = customCss.css.replace(/^\./, "");
         }
+        const sender = this.props.message.get('sender');
 
         // docExtension for get extension of file
         const docExtension = image
@@ -108,13 +109,14 @@ class ImgReply extends PureComponent {
                 className={
                     customCss && customCss.style === "class"
                         ? `image ${customCss.css}`
-                        : "image"
+                        : `image`
                 }
                 style={{
                     cssText:
                         customCss && customCss.style === "custom"
                             ? customCss.css
                             : undefined,
+                    ...(sender === "client" ? {marginLeft : "auto"} : null) 
                 }}>
                 <b className='rw-image-title'>{title}</b>
                 <div className='rw-image-container'>

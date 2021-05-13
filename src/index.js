@@ -120,8 +120,26 @@ const ConnectedWidget = forwardRef((props, ref) => {
       data: JSON.stringify({ bot_id: props.customData.bot_id })
 
     }).done((result) => {
-      const response = JSON.parse(result);
+      var response = JSON.parse(result);
       if (response.status == 'success') {
+        console.log('++++++++++++++++++ response.data ', response.data);
+
+        console.log(' ++++++++++++++++++ customData ', props.customData);
+        console.log(' ++++++++++++++++++ roleid' ,props.customData.role_id);
+
+        if (props.liveChat && ('role_id' in props.customData) && (props.customData.role_id ==='agent')) {
+            console.log(' ++++++++++++++++++ Set embedded as true for role-id' ,props.customData.role_id);
+            response.data.embedded = 'true';
+            response.data.botWindowWidth = response.data.botWindowWidth_agent?response.data.botWindowWidth_agent:response.data.botWindowWidth;
+            response.data.botWindowHeight = response.data.botWindowHeight_agent?response.data.botWindowHeight_agent:response.data.botWindowHeight;
+        }
+
+        console.log('++++++++++++++++++ liveChat ', props.liveChat);
+        console.log('++++++++++++++++++ response.data.embedded ', response.data.embedded);
+        console.log('++++++++++++++++++ response.data.botWindowWidth ', response.data.botWindowWidth);
+        console.log('++++++++++++++++++ response.data.botWindowHeight ', response.data.botWindowHeight);
+        console.log('++++++++++++++++++ response.data ', response.data);
+
         setConfigData(response.data);
       }
     }).fail(() => {
